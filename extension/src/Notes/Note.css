@@ -1,0 +1,63 @@
+.nota {
+    position: absolute;
+    z-index: 9;
+    width: 150px;
+    background-color: #333;
+    border: 1px solid #000;
+  }
+  
+.nota-header {
+    text-align:center;
+    z-index: 10;
+    height: 40px;
+    background-color: #444;
+    color: #ccc;
+    font-size: 16px;
+    font-style:normal;
+    font-weight: bold;
+    resize: vertical;
+
+    width: 146px;
+    border: 0px solid #333;
+    
+}
+
+.nota-drag {
+  cursor: move;
+  z-index: 9;
+  float: left;
+  height: 15px;
+  background-color: #444;
+  color: #ccc;
+
+  width: 135px;
+  border: 0px solid #333;
+  
+}
+
+.nota-close {
+  z-index: 9;
+  height: 13px;
+  float: left;
+  background-color: #800;
+  color: #ccc;
+
+  width: 12px;
+  border: 1px solid #ccc;
+  
+}
+
+.nota-content {
+    padding-left: 5px;
+    resize: vertical;
+    padding-right: 5px;
+    height: 50px;
+    background-color: #333;
+    text-align: left;
+    font-size: 15px;
+    color:#ccc;
+    font-style:oblique;
+    width: 140px;
+    border: 0px solid #333;
+    border-style:solid;
+  }
