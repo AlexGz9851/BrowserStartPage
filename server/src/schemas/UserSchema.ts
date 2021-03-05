@@ -1,63 +1,59 @@
 import {
-  GraphQLInt,
-  GraphQLList,
   GraphQLNonNull,
   GraphQLObjectType,
   GraphQLString
 } from 'graphql';
 
-import { addUser, getUserById, getUserByUsername, getUsers, IUser } from '../models/UserModel';
+import { login, signUp, IUser } from '../models/UserModel';
+import SettingsSchema from './SettingsSchema';
 
-const userType = new GraphQLObjectType({
-  name: 'User',
-  description: 'Auth user',
+const UserType = new GraphQLObjectType({
+  name: 'UserData',
   fields: () => ({
     username: {
-      type: GraphQLString,
-      description: 'The username',
+      type: GraphQLString
     },
-    password: {
-      type: GraphQLString,
-      description: 'The password',
-    },
+    settings: {
+      type: SettingsSchema.types[0]
+    }
   }),
 });
 
+const OutputType = new GraphQLObjectType({
+  name: "UserLogin",
+  fields: () => ({
+    jwt: { type: GraphQLString },
+    user: { type: UserType }
+  })
+})
+
 const query = {
-  users: {
-    type: new GraphQLList(userType),
-    args: {
-      limit: {
-        description: 'limit items in the results',
-        type: GraphQLInt
-      }
-    },
-    resolve: (root: any, { limit }: any) => getUsers(limit)
-  },
-  userByUsername: {
-    type: userType,
+  login: {
+    type: OutputType,
     args: {
       username: {
-        description: 'find by username',
+        type: GraphQLString
+      },
+      password: {
         type: GraphQLString
       }
     },
-    resolve: (root: any, { username }: any) => getUserByUsername(username)
+    resolve: (root: any, { username, password }: IUser) => login(username, password)
   },
 };
 
 const mutation = {
-  addUser: {
-    type: userType,
+  signUp: {
+    type: OutputType,
     args: {
       username: {
-        type: new GraphQLNonNull(GraphQLString)
+        type: GraphQLString
       },
       password: {
-        type: new GraphQLNonNull(GraphQLString)
-      },
+        type: GraphQLString
+      }
     },
-    resolve: (obj: any, input: IUser) => addUser(input)
+    resolve: (obj: any, args: any) => signUp(args)
   },
 };
 
@@ -69,7 +65,7 @@ const UserSchema = {
   query,
   mutation,
   subscription,
-  types: [userType]
+  types: [UserType]
 };
 
 export default UserSchema;

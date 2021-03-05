@@ -2,21 +2,21 @@ import {
   GraphQLObjectType,
   GraphQLSchema,
 } from 'graphql';
-
-// Import each models schema
 import UserSchema from './UserSchema';
+import SettingsSchema from './SettingsSchema';
 
 const graphqlSchema = new GraphQLSchema({
   query: new GraphQLObjectType({
     name: 'Query',
     fields: () => Object.assign(
-      UserSchema.query,
+      UserSchema.query
     )
   }),
   mutation: new GraphQLObjectType({
     name: 'Mutation',
     fields: () => Object.assign(
       UserSchema.mutation,
+      SettingsSchema.mutation
     )
   }),
   // subscription: new GraphQLObjectType({
@@ -28,6 +28,7 @@ const graphqlSchema = new GraphQLSchema({
   // }),
   types: [
     ...UserSchema.types,
+    ...SettingsSchema.types
   ]
 });
 

@@ -1,6 +1,8 @@
 import { Logger } from '@overnightjs/logger';
 import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 import { model, Schema } from 'mongoose';
+import SettingsModel, { SettingsSchema, ISettings } from './SettingsModel';
 import { BaseTimeDocument, BaseTimeSchema } from './utils/ModelUtils';
 
 const BCRYPT_SALT_WORK_FACTOR = 10;
@@ -9,14 +11,15 @@ export interface IUser extends BaseTimeDocument {
   username: string;
   password: string;
   comparePassword(password: string): boolean;
+  settings: ISettings;
 }
 
 const UserSchema = new Schema({
   username: { type: String, required: true, index: { unique: true } },
   password: { type: String, required: true },
+  settings: { type: SettingsSchema },
   ...BaseTimeSchema
 });
-
 
 // Use bcrypt to has the user password in the DB
 UserSchema.pre('save', function preSaveAddPasswordHash(next) {
@@ -57,24 +60,32 @@ export default UserModel;
 
 ////// Functions ////////
 
-export function getUsers(limit = 100) {
-  return UserModel.find().limit(limit);
+export async function login(username: string, password: string) {
+  const candidateUser = await UserModel.findOne({ username });
+  if (!candidateUser) {
+    throw new Error("User not found, please verify the username or password")
+  }
+  const match = await candidateUser.comparePassword(password)
+  if (match) {
+    const token = jwt.sign(
+      { id: candidateUser._id }, process.env.JWT_KEY!, { expiresIn: "365d" });
+    return {
+      user: candidateUser,
+      jwt: token
+    }
+  } else {
+    throw new Error("User not found, please verify the username or password")
+  }
 }
 
-export function getUserById(id: string) {
-  return UserModel.findOne({ _id: id });
-}
-
-export function getUserByUsername(username: string) {
-  return UserModel.findOne({ username });
-}
-
-export function addUser(input: IUser) {
-  const rec = UserModel.create(input);
-  Logger.Info(rec, true)
-  return rec;
-}
-
-export function removeUser(id: string) {
-  return UserModel.findByIdAndRemove(id);
+export async function signUp(input: IUser) {
+  const newSettings = await SettingsModel.create({});
+  input.settings = newSettings;
+  const newUser = await UserModel.create(input);
+  const token = jwt.sign(
+    { id: newUser._id }, process.env.JWT_KEY!, { expiresIn: "365d" })
+  return {
+    user: newUser,
+    jwt: token
+  }
 }
