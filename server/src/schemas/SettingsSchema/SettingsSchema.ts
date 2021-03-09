@@ -1,9 +1,15 @@
-import { updateSettings } from '../../models/SettingsModel';
+import { getSettings, updateSettings } from '../../models/SettingsModel';
 import SettingsInputType from './types/SettingsInputType.gql';
 import SettingsType from './types/SettingsType.gql';
 
 
-const query = {};
+const query = {
+  settings: {
+    type: SettingsType,
+    args: {},
+    resolve: (root: any, args: any, request: any) => getSettings(request)
+  },
+};
 
 const mutation = {
   updateSettings: {
@@ -11,7 +17,7 @@ const mutation = {
     args: {
       settings: { type: SettingsInputType }
     },
-    resolve: (obj: any, args: any, request: any) => updateSettings(request, args)
+    resolve: (obj: any, { settings }: any, request: any) => updateSettings(request, settings)
   },
 };
 

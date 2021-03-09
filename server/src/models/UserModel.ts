@@ -2,6 +2,7 @@ import { Logger } from '@overnightjs/logger';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { model, Schema } from 'mongoose';
+import { INote, NoteSchema } from './NoteModel';
 import SettingsModel, { SettingsSchema, ISettings } from './SettingsModel';
 import { BaseTimeDocument, BaseTimeSchema } from './utils/ModelUtils';
 
@@ -12,12 +13,14 @@ export interface IUser extends BaseTimeDocument {
   password: string;
   comparePassword(password: string): boolean;
   settings: ISettings;
+  notes: Array<INote>;
 }
 
 const UserSchema = new Schema({
   username: { type: String, required: true, index: { unique: true } },
   password: { type: String, required: true },
   settings: { type: SettingsSchema },
+  notes: { type: [NoteSchema], default: [] },
   ...BaseTimeSchema
 });
 

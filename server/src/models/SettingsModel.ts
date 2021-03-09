@@ -25,6 +25,15 @@ const SettingsModel = model<ISettings>('Settings', SettingsSchema);
 export default SettingsModel;
 
 import UserModel from './UserModel';
+
+export async function getSettings(req: any) {
+  if (req.user) {
+    const userId = req.user.id;
+    return (await UserModel.findById(userId))!.settings
+  }
+  throw new Error("Please login first");
+}
+
 export async function updateSettings(req: any, input: ISettings) {
   if (req.user) {
     const userId = req.user.id;

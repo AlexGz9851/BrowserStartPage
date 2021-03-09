@@ -6,16 +6,19 @@ import {
 import NoteTypeType from './NoteTypeType.gql';
 
 const NoteInputType = new GraphQLInputObjectType({
-  name: 'Note',
+  name: 'NoteInput',
   fields: () => ({
-    id: {
-      type: GraphQLNonNull(GraphQLString),
+    _id: {
+      type: GraphQLString,
     },
     type: {
-      type: GraphQLNonNull(NoteTypeType),
+      type: NoteTypeType,
     },
     content: {
-      type: GraphQLNonNull(GraphQLString),
+      type: GraphQLString,
+    },
+    title: {
+      type: GraphQLString,
     },
   }),
 });
