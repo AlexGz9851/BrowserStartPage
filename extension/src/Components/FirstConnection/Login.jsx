@@ -1,5 +1,5 @@
 import { useLazyQuery, gql } from '@apollo/client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 const LOGIN = gql`query login($user: LoginInput!){
   login(user: $user) {
@@ -17,15 +17,15 @@ const LOGIN = gql`query login($user: LoginInput!){
 function LogIn({ setLoggedIn }) {
   const [username, setUsername] = useState("test");
   const [password, setPassword] = useState("test");
-
-  //GRAPHQL
   const [login, { called, error, loading, data }] = useLazyQuery(LOGIN)
 
-  if (called && !loading && data && !error) {
-    localStorage.setItem("token", data.login.jwt)
-    localStorage.setItem("settings", JSON.stringify(data.login.user.settings))
-    setLoggedIn(true)
-  }
+  useEffect(() => {
+    if (called && !loading && data && !error) {
+      localStorage.setItem("token", data.login.jwt)
+      localStorage.setItem("settings", JSON.stringify(data.login.user.settings))
+      setLoggedIn(true)
+    }
+  }, [data])
 
   return (
     <div className="login">
