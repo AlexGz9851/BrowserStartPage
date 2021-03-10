@@ -10,9 +10,11 @@
     text-align:center;
     z-index: 10;
     height: 40px;
+    min-height: 26px;
     background-color: #444;
     color: #ccc;
     font-size: 16px;
+    max-height: 80px;
     font-style:normal;
     font-weight: bold;
     resize: vertical;
@@ -26,19 +28,18 @@
   cursor: move;
   z-index: 9;
   float: left;
-  height: 15px;
+  height: 16px;
   background-color: #444;
   color: #ccc;
 
   width: 135px;
-  border: 0px solid #333;
   
 }
 
 .nota-close {
   z-index: 9;
-  height: 13px;
-  float: left;
+  height: 14px;
+  float: right;
   background-color: #800;
   color: #ccc;
 
@@ -52,6 +53,7 @@
     resize: vertical;
     padding-right: 5px;
     height: 50px;
+    min-height: 40px;
     background-color: #333;
     text-align: left;
     font-size: 15px;
@@ -60,4 +62,5 @@
     width: 140px;
     border: 0px solid #333;
     border-style:solid;
+    max-height: 350px;
   }
