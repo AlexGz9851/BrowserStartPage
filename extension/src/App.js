@@ -9,7 +9,7 @@ import SearchEngine from './Components/SearchEngine/SearchEngine'
 
 function App() {
   const [loggedIn, setLoggedIn] = useState(localStorage.getItem('token') != null);
-  const [settings, setSettings] = useState(JSON.parse(localStorage.getItem('settings')));
+  const [settings, setSettings] = useState(JSON.parse(localStorage.getItem('settings')) || {} );
   const [showSettings, setShowSettings] = useState(false);
 
   const style = {
