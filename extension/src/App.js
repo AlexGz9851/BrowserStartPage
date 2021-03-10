@@ -6,10 +6,11 @@ import { useState } from 'react';
 import Settings from './Components/Settings/Settings';
 import SearchEngine from './Components/SearchEngine/SearchEngine'
 import NotesController from './Notes/NotesController';
+import DateTimeClock from './Components/DateTime/DateTimeClock'
 
 function App() {
   const [loggedIn, setLoggedIn] = useState(localStorage.getItem('token') != null);
-  const [settings, setSettings] = useState(JSON.parse(localStorage.getItem('settings')) || {} );
+  const [settings, setSettings] = useState(JSON.parse(localStorage.getItem('settings')) || {});
   const [showSettings, setShowSettings] = useState(false);
 
   const style = {
@@ -37,10 +38,11 @@ function App() {
           <NotesController savedNotes={notes}></NotesController>
           <a onClick={() => { setShowSettings(!showSettings) }}>SETTINGS</a>
           {showSettings ? <Settings settings={settings} setSettings={setSettings} setLoggedIn={setLoggedIn} /> : <></>}
+          <DateTimeClock />
           <SearchEngine searchEngine={settings.searchEngine} />
         </div> : <FirstConnection setLoggedIn={setLoggedIn} />}
     </ApolloProvider>
-    
+
   );
 }
 
