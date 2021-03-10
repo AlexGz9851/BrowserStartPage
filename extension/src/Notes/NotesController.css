@@ -1,0 +1,11 @@
+.notes-title {
+    position: absolute;
+    text-align:center;
+    top: 1em;
+    font-size: 2em;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    color: #ddd;
+    z-index: 12;
+    font-style:italic;
+    
+}

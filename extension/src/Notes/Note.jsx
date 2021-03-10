@@ -16,8 +16,18 @@ function Note(props){
 
   let defX = ""+(window.innerWidth- 200)+"px";
   let newPosX = (typeof posX === 'undefined') ? defX : posX; 
-  let newPosY = (typeof posY === 'undefined') ? "50px": posY;
-  let intId = (5+ parseInt(id, 10)) % backgroundColors.length;
+  let newPosY = (typeof posY === 'undefined') ? "100px": posY;
+  const hashCode = (str) => {
+    var hash = 0, i, chr;
+    if (str.length === 0) return hash;
+    for (i = 0; i < str.length; i++) {
+      chr   = str.charCodeAt(i);
+      hash  = ((hash << 5) - hash) + chr;
+      hash |= 0; // Convert to 32bit integer
+    }
+    return hash;
+  };
+  let intId = (5+ hashCode(id)) % backgroundColors.length;
 
   const noteStyle = {
     top:newPosY,
@@ -38,17 +48,30 @@ function Note(props){
   const handleChangeContent = (e) =>{
     e.preventDefault();
     setContent(e.target.value);
-    if (typeof props.onChangeContent !== 'undefined'){
-      props.onChangeContent(id);
+    if (typeof props.onChangeNote !== 'undefined'){
+      let note = {id:id, title:title, content:content, posX:posX, posY:posY};
+      console.log(note);
+      props.onChangeNote(note);
     }
   };
   
   const handleChangeTitle= (e) =>{
     e.preventDefault();
     setTitle(e.target.value);
-    if (typeof props.onChangeTitle !== 'undefined'){
-      props.onChangeTitle(id);
+    if (typeof props.onChangeNote !== 'undefined'){
+      let note = {id:id, title:title, content:content, posX:posX, posY:posY};
+      props.onChangeNote(note);
     }
+  };
+
+  const onChangeTitle = (e) =>{
+    e.preventDefault();
+    setTitle(e.target.value);
+  };
+
+  const onChangeContent = (e) =>{
+    e.preventDefault();
+    setContent(e.target.value);
   };
 
   const handleCloseElement= (e) =>{
@@ -85,6 +108,10 @@ function Note(props){
   
     function closeDragElement() {
       // stop moving when mouse button is released:
+      setPosX(elmnt.style.left)
+      setPosY(elmnt.style.top)
+      let note = {id:id, title:title, content:content, posX:elmnt.style.left, posY:elmnt.style.top};
+      props.onChangeNote(note);
       document.onmouseup = null;
       document.onmousemove = null;
     }
@@ -113,7 +140,8 @@ function Note(props){
         name={id+'title'}
         placeholder="Add a cool task here."
         style={headerStyle}
-        onChange={handleChangeTitle}
+        onBlur={handleChangeTitle}
+        onChange={onChangeTitle}
         >
       </textarea>
       </div>
@@ -121,8 +149,10 @@ function Note(props){
         value={content}
         id={id+ 'content'}
         name={ id +'content'}
+        placeholder="What's the task about?"
         style={contentStyle}
-        onChange={handleChangeContent}
+        onBlur={handleChangeContent}
+        onChange={onChangeContent}
         >
       </textarea>
 

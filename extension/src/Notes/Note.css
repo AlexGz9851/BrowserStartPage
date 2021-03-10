@@ -9,7 +9,7 @@
 .nota-header {
     text-align:center;
     z-index: 10;
-    height: 40px;
+    height: 38px;
     min-height: 26px;
     background-color: #444;
     color: #ccc;
@@ -28,7 +28,7 @@
   cursor: move;
   z-index: 9;
   float: left;
-  height: 16px;
+  height: 14px;
   background-color: #444;
   color: #ccc;
 
@@ -38,7 +38,7 @@
 
 .nota-close {
   z-index: 9;
-  height: 14px;
+  height: 13px;
   float: right;
   background-color: #800;
   color: #ccc;
@@ -52,15 +52,20 @@
     padding-left: 5px;
     resize: vertical;
     padding-right: 5px;
-    height: 50px;
+    height: 70px;
     min-height: 40px;
     background-color: #333;
     text-align: left;
     font-size: 15px;
     color:#ccc;
+    
     font-style:oblique;
     width: 140px;
     border: 0px solid #333;
     border-style:solid;
     max-height: 350px;
+  }
+
+  textarea::placeholder {
+    color: #fff;  
   }
