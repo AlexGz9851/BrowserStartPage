@@ -1,12 +1,12 @@
 import {
-  GraphQLObjectType,
+  GraphQLInputObjectType,
   GraphQLString
 } from 'graphql';
-import SearchEngineType from './SearchEngineType.gql';
+import SearchEngineType from './SearchEngine.Type.gql';
 
 
-const SettingsType = new GraphQLObjectType({
-  name: 'Settings',
+const SettingsInputType = new GraphQLInputObjectType({
+  name: 'SettingsInput',
   fields: () => ({
     searchEngine: {
       type: SearchEngineType,
@@ -23,4 +23,4 @@ const SettingsType = new GraphQLObjectType({
   }),
 });
 
-export default SettingsType;
+export default SettingsInputType;

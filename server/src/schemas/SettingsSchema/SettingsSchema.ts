@@ -1,6 +1,6 @@
 import { getSettings, updateSettings } from '../../models/SettingsModel';
-import SettingsInputType from './types/SettingsInputType.gql';
-import SettingsType from './types/SettingsType.gql';
+import SettingsInputType from './types/SettingsInput.Type.gql';
+import SettingsType from './types/Settings.Type.gql';
 
 
 const query = {

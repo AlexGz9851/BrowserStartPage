@@ -3,7 +3,7 @@ import {
   GraphQLObjectType,
   GraphQLString
 } from 'graphql';
-import UserType from './UserType.gql';
+import UserType from './User.Type.gql';
 
 const SessionOutputType = new GraphQLObjectType({
   name: "UserData",

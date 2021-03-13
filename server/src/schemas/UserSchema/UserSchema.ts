@@ -1,8 +1,8 @@
 import { login, signUp } from '../../models/UserModel';
-import UserType from './types/UserType.gql'
-import LoginInputType from './types/LoginInputType.gql';
-import SignUpInputType from './types/SignUpInputType.gql';
-import SessionOutputType from './types/SessionOutputType.gql';
+import UserType from './types/User.Type.gql'
+import LoginInputType from './types/LoginInput.Type.gql';
+import SignUpInputType from './types/SignUpInput.Type.gql';
+import SessionOutputType from './types/SessionOutput.Type.gql';
 
 const query = {
   login: {
