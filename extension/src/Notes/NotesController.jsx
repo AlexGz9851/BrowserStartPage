@@ -1,76 +1,135 @@
-import React, {useState} from "react";
 import Note from './Note.jsx'
 import NoteForm from "./NoteForm.jsx"
-import  "./NotesController.css"
+import { useQuery, useMutation, gql } from '@apollo/client';
+import "./NotesController.css"
+import { useState, useEffect } from 'react';
 
-function NotesController(props){
-    let startingNotes = (typeof props.savedNotes == 'undefined') ? [] : props.savedNotes;
-    const [notes, setNotes] = useState(startingNotes);
+// const NoteTypes = { "TODO": "TODO", "NOTE": "NOTE" }
 
-    const submitCreateNote = (n) =>{
-        //Function for submit to BD.
-        // return note as object described below. 
-        return {
-            id : "" + parseInt(Math.random()*100, 10),
-            title : n.title,
-            content :"",
-            posX: undefined, 
-            posY: undefined,
+const FRAGMENT_NOTE_FIELDS = gql`
+fragment NoteFields on Note {
+  title,
+  _id,
+  type,
+  content,
+  posX, posY,
+  todo {content, done}
+}`
+
+const NOTES = gql`${FRAGMENT_NOTE_FIELDS}
+query { 
+  notes{
+    ...NoteFields
+  }
+}`
+
+const REMOVE_NOTE = gql`mutation removeNote($noteId: String!) {
+  removeNote(noteId: $noteId) {
+      _id
+  }
+}`
+
+const ADD_NOTE = gql`${FRAGMENT_NOTE_FIELDS}
+mutation addNote($note: NoteInput!) {
+  addNote(note: $note) {
+    ...NoteFields
+  }
+}`
+
+const UPDATE_NOTE = gql`${FRAGMENT_NOTE_FIELDS}
+mutation updateNote($note: NoteInput!) {
+  updateNote(note: $note) {
+    ...NoteFields
+  }
+}`
+
+function NotesController() {
+  const notesResponse = useQuery(NOTES);
+  const [notes, setNotes] = useState(JSON.parse(localStorage.getItem('notes')) || [])
+  const [addNote, addNoteResponse] = useMutation(ADD_NOTE, {
+    update(cache, { data: { addNote } }) {
+      cache.modify({
+        fields: {
+          notes(existingNotes = []) {
+            const newNoteRef = cache.writeFragment({
+              data: addNote,
+              fragment: FRAGMENT_NOTE_FIELDS
+            });
+            return [...existingNotes, newNoteRef];
+          }
         }
+      })
     }
-    const submitUpdateNote = (n) =>{
-        //Function for submit to BD.
+  });
+  const [updateNote, updateNoteResponse] = useMutation(UPDATE_NOTE, {
+    update(cache, { data: { updateNote } }) {
+      cache.modify({
+        fields: {
+          notes(existingNotes = []) {
+            const newNoteRef = cache.writeFragment({
+              data: updateNote,
+              fragment: FRAGMENT_NOTE_FIELDS
+            });
+            const filterNotes = existingNotes.filter(note => {
+              const currId = note.__ref.split(":")[1]
+              return currId !== updateNote._id
+            })
+            return [...filterNotes, newNoteRef];
+          }
+        }
+      })
     }
-
-    const submitRemoveNote = (n) =>{
-        //Function for submit to BD.
+  });
+  const [removeNote, removeNoteResponse] = useMutation(REMOVE_NOTE, {
+    update(cache, { data: { removeNote } }) {
+      cache.modify({
+        fields: {
+          notes(existingNotes = []) {
+            return existingNotes.filter(note => {
+              const currId = note.__ref.split(":")[1]
+              return currId !== removeNote._id
+            });
+          }
+        }
+      })
     }
+  });
 
-    const onAddNote = (n) => {
-        let newNote = submitCreateNote(n);
-        let newNotes = [newNote, ...notes];
-        setNotes(newNotes);
-        console.log(newNotes)
-    };
+  useEffect(() => {
+    if (notesResponse.data) {
+      setNotes(notesResponse.data.notes)
+      localStorage.setItem("notes", JSON.stringify(notesResponse.data.notes))
+    }
+  }, [notesResponse])
 
-    const onChangeNote= (currentNote) =>{
-        submitUpdateNote(currentNote);
-        let remainingNotes = notes.filter((n)=> n.id !== currentNote.id);
-        let newNotes = [currentNote, ...remainingNotes];
-        setNotes(newNotes);
-        console.log(newNotes)
+  const onAddNote = (n) => {
+    addNote({ variables: { note: n } })
+  };
 
-        
-    };
+  const onChangeNote = (currentNote) => {
+    updateNote({ variables: { note: currentNote } })
+  };
 
-    const onRemoveNote = (id) =>{
-        submitRemoveNote(id)
-        let remainingNotes = notes.filter((n)=> n.id !== id);
-        setNotes(remainingNotes);
-        console.log(remainingNotes)
-    };
-    
+  const onRemoveNote = (_id) => {
+    removeNote({ variables: { noteId: _id } })
+  };
 
-    let defX = ""+(window.innerWidth- 300)+"px";
-    const titleStyle = { left:defX, };
-
-    return (
-        <div>
-            <h2 className="notes-title" style={titleStyle}>
-            Add cute notes :3
-            </h2>
-            <NoteForm onSubmit={onAddNote}/>
-            {notes.map((note) => (
-                <Note id={note.id} title={note.title}
-                key={note.id}
-                content={note.content}  
-                posX={note.posX}
-                posY={note.posY}
-                onRemove={onRemoveNote}  
-                onChangeNote={onChangeNote}/>
-            ))}
-        </div>
-    );
+  return (
+    <div>
+      {(!notesResponse || notesResponse.loading) && "LOADING"}
+      {notesResponse.error && "ERROR" + notesResponse.error}
+      {addNoteResponse.error && "Error while adding"}
+      {updateNoteResponse.error && "Error while adding"}
+      {removeNoteResponse.error && "Error while adding"}
+      <NoteForm onSubmit={onAddNote} />
+      {notes.map((note) => (
+        <Note note={note}
+          onRemoveNote={onRemoveNote}
+          onChangeNote={onChangeNote}
+          key={note._id} />
+      ))}
+    </div>
+  );
 }
 
 

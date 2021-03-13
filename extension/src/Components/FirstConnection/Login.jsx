@@ -14,7 +14,7 @@ const LOGIN = gql`query login($user: LoginInput!){
   }
 }`
 
-function LogIn({ setLoggedIn }) {
+function LogIn({ setLoggedIn, setSettings }) {
   const [username, setUsername] = useState("test");
   const [password, setPassword] = useState("test");
   const [login, { called, error, loading, data }] = useLazyQuery(LOGIN)
@@ -24,15 +24,16 @@ function LogIn({ setLoggedIn }) {
       localStorage.setItem("token", data.login.jwt)
       localStorage.setItem("settings", JSON.stringify(data.login.user.settings))
       setLoggedIn(true)
+      setSettings(data.login.user.settings)
     }
-  }, [data])
+  }, [data, called, loading, error, setLoggedIn, setSettings])
 
   return (
     <div className="login">
       {error ? <>{error.message}</> : <></>}
       {loading ? "..." : <div>
         <input type="text" name="user" value={username} onChange={(ev) => setUsername(ev.target.value)} />
-        <input type="text" name="password" value={password} onChange={(ev) => setPassword(ev.target.value)} />
+        <input type="password" name="password" value={password} onChange={(ev) => setPassword(ev.target.value)} />
         <input type="button" value="login" onClick={() => {
           login({
             variables: { user: { username, password } }
