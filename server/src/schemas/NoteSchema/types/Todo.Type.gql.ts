@@ -1,8 +1,8 @@
 import {
-  GraphQLObjectType,
-  GraphQLString,
+  GraphQLBoolean,
   GraphQLNonNull,
-  GraphQLBoolean
+  GraphQLObjectType,
+  GraphQLString
 } from 'graphql';
 
 const TodoType = new GraphQLObjectType({

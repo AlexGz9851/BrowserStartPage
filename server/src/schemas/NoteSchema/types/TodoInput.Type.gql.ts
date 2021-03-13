@@ -1,7 +1,7 @@
 import {
+  GraphQLBoolean,
   GraphQLInputObjectType,
-  GraphQLString,
-  GraphQLBoolean
+  GraphQLString
 } from 'graphql';
 
 const TodoInputType = new GraphQLInputObjectType({

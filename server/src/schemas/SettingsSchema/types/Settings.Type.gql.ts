@@ -4,7 +4,6 @@ import {
 } from 'graphql';
 import SearchEngineType from './SearchEngine.Type.gql';
 
-
 const SettingsType = new GraphQLObjectType({
   name: 'Settings',
   fields: () => ({

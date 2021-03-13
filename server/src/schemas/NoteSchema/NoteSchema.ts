@@ -1,7 +1,7 @@
-import { GraphQLBoolean, GraphQLList, GraphQLNonNull, GraphQLString } from "graphql";
-import { addNote, getNotes, getNote, removeNote, updateNote } from "../../models/NoteModel";
-import NoteInputType from "./types/NoteInput.Type.gql";
-import NoteType from "./types/Note.Type.gql";
+import { GraphQLBoolean, GraphQLList, GraphQLNonNull, GraphQLString } from 'graphql';
+import { addNote, getNote, getNotes, removeNote, updateNote } from '../../models/NoteModel';
+import NoteType from './types/Note.Type.gql';
+import NoteInputType from './types/NoteInput.Type.gql';
 
 const query = {
   notes: {

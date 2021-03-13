@@ -1,5 +1,6 @@
+import dotenv from 'dotenv';
 import MainServer from './Server';
-require('dotenv').config()
+dotenv.config()
 
 const server = new MainServer();
 server.start();

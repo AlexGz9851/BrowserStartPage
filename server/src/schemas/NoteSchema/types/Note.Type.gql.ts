@@ -1,8 +1,8 @@
 import {
-  GraphQLObjectType,
-  GraphQLString,
+  GraphQLList,
   GraphQLNonNull,
-  GraphQLList
+  GraphQLObjectType,
+  GraphQLString
 } from 'graphql';
 import DateType from '../../common_types/Date.Type.gql';
 import NoteTypeType from './NoteType.Type.gql';

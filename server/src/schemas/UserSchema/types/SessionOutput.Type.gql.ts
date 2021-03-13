@@ -6,7 +6,7 @@ import {
 import UserType from './User.Type.gql';
 
 const SessionOutputType = new GraphQLObjectType({
-  name: "UserData",
+  name: 'UserData',
   fields: () => ({
     jwt: { type: GraphQLNonNull(GraphQLString) },
     user: { type: GraphQLNonNull(UserType) }
