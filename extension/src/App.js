@@ -5,7 +5,7 @@ import GraphQLClient from './utils/GraphQLClient';
 import { useState } from 'react';
 import Settings from './Components/Settings/Settings';
 import SearchEngine from './Components/SearchEngine/SearchEngine'
-import NotesController from './Notes/NotesController';
+import NotesController from './Components/Notes/NotesController';
 import DateTimeClock from './Components/DateTime/DateTimeClock'
 
 function App() {

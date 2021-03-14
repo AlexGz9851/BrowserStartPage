@@ -42,7 +42,7 @@ export default NoteModel;
 export async function getNotes(req: any) {
   if (req.user) {
     const userId = req.user.id;
-    return (await UserModel.findById(userId))!.notes
+    return (await UserModel.findById(Types.ObjectId(userId)))!.notes
   }
   throw new Error('Please login first');
 }
@@ -50,7 +50,7 @@ export async function getNotes(req: any) {
 export async function getNote(req: any, id: Types.ObjectId) {
   if (req.user) {
     const userId = req.user.id;
-    const user = await UserModel.findOne({ _id: userId });
+    const user = await UserModel.findOne({ _id: Types.ObjectId(userId) });
     return user?.notes.find(note => note._id?.equals(id));
   }
   throw new Error('Please login first');
@@ -59,9 +59,8 @@ export async function getNote(req: any, id: Types.ObjectId) {
 export async function addNote(req: any, input: INote) {
   if (req.user) {
     const userId = req.user.id;
-    const note = await NoteModel.create(input)
+    const note = new NoteModel(input)
     await UserModel.updateOne({ _id: userId }, { '$push': { 'notes': note } })
-    await NoteModel.findByIdAndRemove(note._id, { useFindAndModify: true });
     return note;
   }
   throw new Error('Please login first');
@@ -70,15 +69,13 @@ export async function addNote(req: any, input: INote) {
 export async function updateNote(req: any, input: INote) {
   if (req.user) {
     const userId = req.user.id;
+    let noteId = input._id instanceof Types.ObjectId ? input._id : Types.ObjectId(input._id as any);
     for (const [key, value] of Object.entries(input)) {
-      if (key === '_id') { continue }
-      const setKey = 'notes.$.' + key
-      await UserModel.updateOne(
-        { _id: userId, 'notes._id': input._id },
-        { '$set': { [setKey]: value } }
-      )
+      if (key === "_id") { continue }
+      const setKey = "notes.$." + key
+      await UserModel.updateOne({ _id: userId, "notes._id": noteId }, { "$set": { [setKey]: value } })
     }
-    return await getNote(req, input._id!);
+    return await getNote(req, noteId!);
   }
   throw new Error('Please login first');
 }
@@ -87,7 +84,7 @@ export async function removeNote(req: any, id: Types.ObjectId) {
   if (req.user) {
     const userId = req.user.id;
     const note = await getNote(req, id);
-    await UserModel.updateOne({ _id: userId }, { '$pull': { 'notes': { _id: id } } })
+    await UserModel.findByIdAndUpdate(userId, { '$pull': { 'notes': { _id: note!._id } } })
     return note
   }
   throw new Error('Please login first');

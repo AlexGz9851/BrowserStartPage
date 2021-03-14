@@ -39,12 +39,12 @@ function Note({ note, onRemoveNote, onChangeNote }) {
     color: textColors[intId],
   };
 
-  const submitChanges = () => {
-    onChangeNote(noteCopy);
+  const submitChanges = (val, field) => {
+    onChangeNote({ _id: note._id, [field]: val });
   }
 
   const onChange = (val, field) => {
-    setNoteCopy({ _id: note._id, [field]: val })
+    setNoteCopy({ ...noteCopy, [field]: val })
   }
 
   const handleCloseElement = (e) => {
@@ -103,16 +103,15 @@ function Note({ note, onRemoveNote, onChangeNote }) {
         <div className="nota-close"
           id={noteCopy._id + 'close'}
           onClick={handleCloseElement}
-        >
-        </div>
+        >x</div>
         <textarea className='nota-header' type="text"
           value={noteCopy.title}
           id={noteCopy._id + 'title'}
           name={noteCopy._id + 'title'}
           placeholder="Add a cool task here."
           style={headerStyle}
-          onBlur={submitChanges}
-          onChange={(ev) => { onChange(ev.target.value, "title") }}
+          onBlur={(ev) => submitChanges(ev.target.value, "title")}
+          onChange={(ev) => onChange(ev.target.value, "title")}
         >
         </textarea>
       </div>
@@ -122,8 +121,8 @@ function Note({ note, onRemoveNote, onChangeNote }) {
         name={noteCopy._id + 'content'}
         placeholder="What's the task about?"
         style={contentStyle}
-        onBlur={submitChanges}
-        onChange={(ev) => { onChange(ev.target.value, "content") }}
+        onBlur={(ev) => submitChanges(ev.target.value, "content")}
+        onChange={(ev) => onChange(ev.target.value, "content")}
       >
       </textarea>
 

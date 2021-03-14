@@ -1,47 +1,11 @@
-import Note from './Note.jsx'
-import NoteForm from "./NoteForm.jsx"
-import { useQuery, useMutation, gql } from '@apollo/client';
+import Note from '../Note'
+import NoteForm from "../NoteForm"
+import { useQuery, useMutation } from '@apollo/client';
 import "./NotesController.css"
 import { useState, useEffect } from 'react';
+import { NOTES, FRAGMENT_NOTE_FIELDS, ADD_NOTE, UPDATE_NOTE, REMOVE_NOTE } from './NotesController.gql'
 
 // const NoteTypes = { "TODO": "TODO", "NOTE": "NOTE" }
-
-const FRAGMENT_NOTE_FIELDS = gql`
-fragment NoteFields on Note {
-  title,
-  _id,
-  type,
-  content,
-  posX, posY,
-  todo {content, done}
-}`
-
-const NOTES = gql`${FRAGMENT_NOTE_FIELDS}
-query { 
-  notes{
-    ...NoteFields
-  }
-}`
-
-const REMOVE_NOTE = gql`mutation removeNote($noteId: String!) {
-  removeNote(noteId: $noteId) {
-      _id
-  }
-}`
-
-const ADD_NOTE = gql`${FRAGMENT_NOTE_FIELDS}
-mutation addNote($note: NoteInput!) {
-  addNote(note: $note) {
-    ...NoteFields
-  }
-}`
-
-const UPDATE_NOTE = gql`${FRAGMENT_NOTE_FIELDS}
-mutation updateNote($note: NoteInput!) {
-  updateNote(note: $note) {
-    ...NoteFields
-  }
-}`
 
 function NotesController() {
   const notesResponse = useQuery(NOTES);
@@ -122,12 +86,10 @@ function NotesController() {
       {updateNoteResponse.error && "Error while adding"}
       {removeNoteResponse.error && "Error while adding"}
       <NoteForm onSubmit={onAddNote} />
-      {notes.map((note) => (
-        <Note note={note}
-          onRemoveNote={onRemoveNote}
-          onChangeNote={onChangeNote}
-          key={note._id} />
-      ))}
+      {notes.map(note => <Note note={note}
+        onRemoveNote={onRemoveNote}
+        onChangeNote={onChangeNote}
+        key={note._id} />)}
     </div>
   );
 }

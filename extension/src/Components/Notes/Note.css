@@ -42,10 +42,12 @@
   float: right;
   background-color: #800;
   color: #ccc;
-
+  cursor: pointer;
   width: 12px;
   border: 1px solid #ccc;
-  
+  line-height: 10px;
+  font-size: 10px;
+  display: block;
 }
 
 .nota-content {
