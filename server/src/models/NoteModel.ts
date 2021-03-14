@@ -69,11 +69,15 @@ export async function addNote(req: any, input: INote) {
 export async function updateNote(req: any, input: INote) {
   if (req.user) {
     const userId = req.user.id;
-    let noteId = input._id instanceof Types.ObjectId ? input._id : Types.ObjectId(input._id as any);
+    let noteId = input._id instanceof Types.ObjectId ? input._id :
+      Types.ObjectId(input._id as any);
     for (const [key, value] of Object.entries(input)) {
       if (key === "_id") { continue }
       const setKey = "notes.$." + key
-      await UserModel.updateOne({ _id: userId, "notes._id": noteId }, { "$set": { [setKey]: value } })
+      await UserModel.updateOne(
+        { _id: userId, "notes._id": noteId },
+        { "$set": { [setKey]: value } }
+      )
     }
     return await getNote(req, noteId!);
   }
@@ -84,7 +88,10 @@ export async function removeNote(req: any, id: Types.ObjectId) {
   if (req.user) {
     const userId = req.user.id;
     const note = await getNote(req, id);
-    await UserModel.findByIdAndUpdate(userId, { '$pull': { 'notes': { _id: note!._id } } })
+    await UserModel.updateOne(
+      { _id: userId },
+      { '$pull': { 'notes': { _id: note!._id } } }
+    )
     return note
   }
   throw new Error('Please login first');
