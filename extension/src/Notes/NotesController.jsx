@@ -11,11 +11,13 @@ function NotesController(props){
         //Function for submit to BD.
         // return note as object described below. 
         return {
-            id : "" + parseInt(Math.random()*100, 10),
+            id : "" + parseInt(Math.random()*10000, 10),
             title : n.title,
             content :"",
             posX: undefined, 
             posY: undefined,
+            isTodoList : n.isTodoList,
+            todos : n.todos,
         }
     }
     const submitUpdateNote = (n) =>{
@@ -62,12 +64,14 @@ function NotesController(props){
             <NoteForm onSubmit={onAddNote}/>
             {notes.map((note) => (
                 <Note id={note.id} title={note.title}
-                key={note.id}
-                content={note.content}  
-                posX={note.posX}
-                posY={note.posY}
-                onRemove={onRemoveNote}  
-                onChangeNote={onChangeNote}/>
+                    key={note.id}
+                    content={note.content}  
+                    posX={note.posX}
+                    posY={note.posY}
+                    isTodoList={note.isTodoList}
+                    todos={note.todos}
+                    onRemove={onRemoveNote}  
+                    onChangeNote={onChangeNote}/>
             ))}
         </div>
     );

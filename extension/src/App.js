@@ -23,12 +23,29 @@ function App() {
     content :"Tanto como la caricia de la brisa en un nuevo dia",
     posX: "50px", 
     posY: "100px",
+    isTodoList: false,
+    todos: [],
 }, {
   id : "" + parseInt(Math.random()*100, 10),
   title : "Supermercado",
   content :"Leche\nHuevos\nPan\nManzanas",
   posX: "300px", 
   posY: "200px",
+  isTodoList: false,
+  todos: [],
+}, { 
+  id : "" + parseInt(Math.random()*100, 10),
+  title : "Te quiero tanto",
+  content :"",
+  posX: "200px", 
+  posY: "300px",
+  isTodoList: true,
+  todos: [
+    {id:"1001", content:"Sonia bonita"},
+    {id:"222", content:"Tu amor por el mundo"},
+    {id:"3333", content:"Se derrama hacia todos"},
+    {id:"4443", content:"Y se vuelve fecundo"}
+  ],
 }];
 
   return (

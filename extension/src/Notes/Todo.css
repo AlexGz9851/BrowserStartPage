@@ -1,0 +1,10 @@
+.todo{
+    flex-direction: row;
+    width: 240px;
+}
+
+.todo-input{
+    width: 210px;
+    border:none;
+    padding: 5px 0px;
+}

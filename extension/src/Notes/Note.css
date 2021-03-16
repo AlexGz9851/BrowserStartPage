@@ -14,7 +14,6 @@
     background-color: #444;
     color: #ccc;
     font-size: 16px;
-    max-height: 80px;
     font-style:normal;
     font-weight: bold;
     resize: vertical;
@@ -27,23 +26,31 @@
 .nota-drag {
   cursor: move;
   z-index: 9;
-  float: left;
-  height: 14px;
+  float:left;
+  height: 17px;
   background-color: #444;
   color: #ccc;
 
-  width: 135px;
-  
+  width: 132px;
 }
 
+.icon {
+  height: 15px;
+  padding-bottom: 2px;
+  padding-right: 4px;
+  padding-left: 0px;
+  margin: 0px;
+}
 .nota-close {
   z-index: 9;
-  height: 13px;
+  height: 15px;
+  width: 15px;
   float: right;
   background-color: #800;
-  color: #ccc;
-
-  width: 12px;
+  color: #fff;
+  padding: 0;
+  margin: 0;
+  border: 0;
   border: 1px solid #ccc;
   
 }
@@ -63,7 +70,6 @@
     width: 140px;
     border: 0px solid #333;
     border-style:solid;
-    max-height: 350px;
   }
 
   textarea::placeholder {
