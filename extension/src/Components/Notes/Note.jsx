@@ -168,13 +168,17 @@ function Note({ note, onRemoveNote, onChangeNote }) {
   });
 
   useEffect(() => {
-    if (titleTextAreaRef.current && contentTextAreaRef.current) {
+    if (titleTextAreaRef?.current && contentTextAreaRef?.current) {
       new ResizeObserver(() => {
-        setWidth(titleTextAreaRef.current.style.width)
+        if (titleTextAreaRef?.current) {
+          setWidth(titleTextAreaRef.current.style.width)
+        }
         // TODO(alexgz9851): save into db
       }).observe(titleTextAreaRef.current)
       new ResizeObserver(() => {
-        setWidth(contentTextAreaRef.current.style.width)
+        if (contentTextAreaRef?.current) {
+          setWidth(contentTextAreaRef.current.style.width)
+        }
         // TODO(alexgz9851): save into db
       }).observe(contentTextAreaRef.current)
     }

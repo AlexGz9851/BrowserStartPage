@@ -20,7 +20,7 @@
   font-style:normal;
   font-weight: bold;
   resize: vertical;
-  width: 146px;
+  width: 100%;
   border: 0px solid #333;
 }
 
@@ -31,7 +31,7 @@
   height: 17px;
   background-color: #444;
   color: #ccc;
-  width: 132px;
+  width: 100%;
 }
 
 .icon {
