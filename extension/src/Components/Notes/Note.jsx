@@ -7,8 +7,11 @@ import MiniTodoList from '../MiniTodoList/MiniTodoList.jsx'
 
 function Note({ note, onRemoveNote, onChangeNote }) {
   const [noteCopy, setNoteCopy] = useState(note);
+  const [width, setWidth] = useState()
   const NoteTypes = { "TODO": "TODO", "NOTE": "NOTE" }
   const noteHtmlNode = useRef(null);
+  const titleTextAreaRef = useRef(null);
+  const contentTextAreaRef = useRef(null);
 
   const dimensions = {
     height: window.innerHeight,
@@ -43,17 +46,20 @@ function Note({ note, onRemoveNote, onChangeNote }) {
     top: newPosY,
     left: newPosX,
     backgroundColor: backgroundColors[intId],
+    width: width
   };
 
   const headerStyle = {
     backgroundColor: headerColors[intId],
     color: textColors[intId],
-    height: "100%"
+    height: "100%",
+    width: width
   };
 
   const titleStyle = {
     backgroundColor: headerColors[intId],
     color: textColors[intId],
+    width: width
   };
 
   const dragStyle = {
@@ -64,6 +70,7 @@ function Note({ note, onRemoveNote, onChangeNote }) {
   const contentStyle = {
     backgroundColor: backgroundColors[intId],
     color: textColors[intId],
+    width: width
   };
 
   if (note.type === NoteTypes.TODO) {
@@ -160,29 +167,44 @@ function Note({ note, onRemoveNote, onChangeNote }) {
 
   });
 
+  useEffect(() => {
+    if (titleTextAreaRef.current && contentTextAreaRef.current) {
+      new ResizeObserver(() => {
+        setWidth(titleTextAreaRef.current.style.width)
+
+      }).observe(titleTextAreaRef.current)
+      new ResizeObserver(() => {
+        setWidth(contentTextAreaRef.current.style.width)
+      }).observe(contentTextAreaRef.current)
+    }
+  }, [titleTextAreaRef, contentTextAreaRef])
+
   return (
     <div id={noteCopy._id}
       className="nota"
       style={noteStyle}
       ref={noteHtmlNode}
     >
-      <div style={headerStyle} >
+      <div style={headerStyle} className="nota-header">
         <div className="nota-drag"
           style={dragStyle}
           id={noteCopy._id + 'drag'}
           onMouseDown={dragElement}
-        ></div>
-        <div className="nota-close"
-          id={noteCopy._id + 'close'}
-          onClick={handleCloseElement}
-        ><AiOutlineClose className='icon' /></div>
-        <TextareaAutosize className='nota-header' type="text"
+        >
+          <div className="nota-close"
+            id={noteCopy._id + 'close'}
+            onClick={handleCloseElement}
+          ><AiOutlineClose className='icon' /></div>
+        </div>
+
+        <TextareaAutosize className='nota-header-content' type="text"
+          ref={titleTextAreaRef}
           value={noteCopy.title}
           id={noteCopy._id + 'title'}
           name={noteCopy._id + 'title'}
           placeholder="Add a cool task here."
           style={titleStyle}
-          minRows={2}
+          minRows={1}
           maxRows={10}
           onBlur={(ev) => submitChanges(ev.target.value, "title")}
           onChange={(ev) => onChange(ev.target.value, "title")} />
@@ -194,6 +216,7 @@ function Note({ note, onRemoveNote, onChangeNote }) {
           style={contentStyle} />
         :
         <TextareaAutosize className='nota-content' type="text"
+          ref={contentTextAreaRef}
           value={noteCopy.content || ""}
           id={noteCopy._id + 'content'}
           name={noteCopy._id + 'content'}

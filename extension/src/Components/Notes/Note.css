@@ -5,12 +5,12 @@
   background-color: #333;
   border: 1px solid #000;
 }
-  
-textarea.nota-header {
-  height: 100% !important;
-}
 
 .nota-header {
+  padding: 0 5px;
+}
+
+.nota-header-content {
   text-align:center;
   z-index: 10;
   min-height: 26px;
@@ -60,9 +60,8 @@ textarea.nota-header {
 }
 
 .nota-content {
-  padding-left: 5px;
-  resize: vertical;
-  padding-right: 5px;
+  padding: 0 5px;
+  resize: both;
   height: 70px;
   min-height: 40px;
   background-color: #333;
