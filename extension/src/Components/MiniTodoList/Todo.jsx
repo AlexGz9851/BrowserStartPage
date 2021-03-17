@@ -14,7 +14,7 @@ function Todo(props){
     setTodoContent(e.target.value);
     if (typeof props.onChangeTodo !== 'undefined'){
       // TODO  que hacer en cambio de todo.
-      props.onChangeTodo({id: id, content: todoContent});
+      props.onChangeTodo({content: todoContent}, id);
     }
   };
 

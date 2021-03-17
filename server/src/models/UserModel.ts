@@ -3,7 +3,7 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { model, Schema } from 'mongoose';
 import { INote, NoteSchema } from './NoteModel';
-import SettingsModel, { SettingsSchema, ISettings } from './SettingsModel';
+import SettingsModel, { ISettings, SettingsSchema } from './SettingsModel';
 import { BaseTimeDocument, BaseTimeSchema } from './utils/ModelUtils';
 
 const BCRYPT_SALT_WORK_FACTOR = 10;
@@ -13,7 +13,7 @@ export interface IUser extends BaseTimeDocument {
   password: string;
   comparePassword(password: string): boolean;
   settings: ISettings;
-  notes: Array<INote>;
+  notes: INote[];
 }
 
 const UserSchema = new Schema({
@@ -66,18 +66,18 @@ export default UserModel;
 export async function login(username: string, password: string) {
   const candidateUser = await UserModel.findOne({ username });
   if (!candidateUser) {
-    throw new Error("User not found, please verify the username or password")
+    throw new Error('User not found, please verify the username or password')
   }
   const match = await candidateUser.comparePassword(password)
   if (match) {
     const token = jwt.sign(
-      { id: candidateUser._id }, process.env.JWT_KEY!, { expiresIn: "365d" });
+      { id: candidateUser._id }, process.env.JWT_KEY!, { expiresIn: '365d' });
     return {
       user: candidateUser,
       jwt: token
     }
   } else {
-    throw new Error("User not found, please verify the username or password")
+    throw new Error('User not found, please verify the username or password')
   }
 }
 
@@ -86,7 +86,7 @@ export async function signUp(input: IUser) {
   input.settings = newSettings;
   const newUser = await UserModel.create(input);
   const token = jwt.sign(
-    { id: newUser._id }, process.env.JWT_KEY!, { expiresIn: "365d" })
+    { id: newUser._id }, process.env.JWT_KEY!, { expiresIn: '365d' })
   return {
     user: newUser,
     jwt: token

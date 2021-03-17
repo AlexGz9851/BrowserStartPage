@@ -2,9 +2,9 @@ import {
   GraphQLObjectType,
   GraphQLSchema,
 } from 'graphql';
-import UserSchema from './UserSchema/UserSchema';
-import SettingsSchema from './SettingsSchema/SettingsSchema';
 import NoteSchema from './NoteSchema/NoteSchema';
+import SettingsSchema from './SettingsSchema/SettingsSchema';
+import UserSchema from './UserSchema/UserSchema';
 
 const graphqlSchema = new GraphQLSchema({
   query: new GraphQLObjectType({

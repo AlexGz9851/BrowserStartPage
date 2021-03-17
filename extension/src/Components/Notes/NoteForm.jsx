@@ -3,6 +3,7 @@ import './NoteForm.css';
 
 
 function NoteForm(props){
+    const NoteTypes = { "TODO": "TODO", "NOTE": "NOTE" }
     const [input, setInput] = useState('');
     const [noteType, setNoteType] = useState(false);
 
@@ -15,7 +16,7 @@ function NoteForm(props){
     
         props.onSubmit({
           title: input,
-          isTodoList: noteType,
+          type: (noteType ? NoteTypes.TODO: NoteTypes.NOTE ),
         });
         setInput('');
         setNoteType(false);

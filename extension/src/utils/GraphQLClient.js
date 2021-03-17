@@ -1,5 +1,16 @@
-import { ApolloClient, createHttpLink, InMemoryCache } from '@apollo/client';
+import { ApolloClient, createHttpLink, InMemoryCache, ApolloLink } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
+
+const cleanTypeName = new ApolloLink((operation, forward) => {
+  if (operation.variables) {
+
+    const omitTypename = (key, value) => (key === '__typename' ? undefined : value);
+    operation.variables = JSON.parse(JSON.stringify(operation.variables), omitTypename);
+  }
+  return forward(operation).map((data) => {
+    return data;
+  });
+});
 
 const httpLink = createHttpLink({
   uri: process.env.NODE_ENV === "production" ? process.env.REACT_APP_PRODUCTION_SERVER : process.env.REACT_APP_DEVELOPMENT_SERVER,
@@ -18,8 +29,10 @@ const authLink = setContext((_, { headers }) => {
 });
 
 const GraphQLClient = new ApolloClient({
-  link: authLink.concat(httpLink),
-  cache: new InMemoryCache()
+  link: ApolloLink.from([authLink, cleanTypeName, httpLink]),
+  cache: new InMemoryCache({
+    addTypename: true
+  })
 });
 
 export default GraphQLClient;

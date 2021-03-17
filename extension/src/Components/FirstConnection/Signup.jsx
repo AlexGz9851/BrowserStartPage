@@ -1,5 +1,5 @@
 import { useMutation, gql } from '@apollo/client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 const SIGNUP = gql`mutation signUp($user: SignUpInput!){
   signUp(user: $user){
@@ -14,7 +14,7 @@ const SIGNUP = gql`mutation signUp($user: SignUpInput!){
   }
 }`
 
-function SignUp({ setLoggedIn }) {
+function SignUp({ setLoggedIn, setSettings }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
@@ -23,18 +23,21 @@ function SignUp({ setLoggedIn }) {
     variables: { user: { username, password } }
   });
 
-  if (!loading && data) {
-    localStorage.setItem("token", data.signUp.jwt)
-    localStorage.setItem("settings", JSON.stringify(data.signUp.user.settings))
-    setLoggedIn(true)
-  }
+  useEffect(() => {
+    if (!loading && data) {
+      localStorage.setItem("token", data.signUp.jwt)
+      localStorage.setItem("settings", JSON.stringify(data.signUp.user.settings))
+      setLoggedIn(true)
+      setSettings(data.signUp.user.settings)
+    }
+  }, [data, loading, setLoggedIn, setSettings])
 
   return (
     <div className="signup">
       {error ? <>{error.message}</> : <></>}
       {loading ? "..." : <div>
         <input type="text" name="user" value={username} onChange={(ev) => setUsername(ev.target.value)} />
-        <input type="text" name="password" value={password} onChange={(ev) => setPassword(ev.target.value)} />
+        <input type="password" name="password" value={password} onChange={(ev) => setPassword(ev.target.value)} />
         <input type="button" value="signup" onClick={signUp} />
       </div>
       }

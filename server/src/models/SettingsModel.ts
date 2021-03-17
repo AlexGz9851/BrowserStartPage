@@ -14,8 +14,8 @@ export interface ISettings extends BaseTimeDocument {
 
 export const SettingsSchema = new Schema({
   searchEngine: { type: SearchEngineType, default: SearchEngineType.GOOGLE },
-  googleToken: { type: String, default: "" },
-  backgroundImage: { type: String, default: "" },
+  googleToken: { type: String, default: '' },
+  backgroundImage: { type: String, default: '' },
   ...BaseTimeSchema
 });
 
@@ -31,14 +31,14 @@ export async function getSettings(req: any) {
     const userId = req.user.id;
     return (await UserModel.findById(userId))!.settings
   }
-  throw new Error("Please login first");
+  throw new Error('Please login first');
 }
 
 export async function updateSettings(req: any, input: ISettings) {
   if (req.user) {
     const userId = req.user.id;
-    await UserModel.updateOne({ _id: userId }, { "$set": { "settings": input } })
+    await UserModel.updateOne({ _id: userId }, { '$set': { 'settings': input } })
     return (await UserModel.findById(userId))!.settings
   }
-  throw new Error("Please login first");
+  throw new Error('Please login first');
 }

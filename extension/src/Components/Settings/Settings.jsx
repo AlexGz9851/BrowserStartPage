@@ -12,14 +12,15 @@ const UPDATESETTINGS = gql`mutation updateSettings($settings: SettingsInput!){
 
 function Settings({ settings, setSettings, setLoggedIn }) {
   const [tempSettings, setTempSettings] = useState({ searchEngine: settings.searchEngine, googleToken: settings.googleToken, backgroundImage: settings.backgroundImage });
-  const [updateSettings, { called, error, loading, data }] = useMutation(UPDATESETTINGS, {
+  const [updateSettings, { called, loading, data }] = useMutation(UPDATESETTINGS, {
     variables: { settings: tempSettings }
   });
 
   const logOut = () => {
-    localStorage.clear();
-    GraphQLClient.resetStore();
     setLoggedIn(false);
+    setSettings({});
+    localStorage.clear();
+    GraphQLClient.clearStore();
   }
 
   if (!loading && data && called) {
@@ -41,7 +42,7 @@ function Settings({ settings, setSettings, setLoggedIn }) {
       <label htmlFor="searchengine">Google token:</label>
       <input type="text" name="googleToken" id="googleToken" value={tempSettings.googleToken} onChange={(ev) => setTempSettings({ ...tempSettings, googleToken: ev.target.value })} />
       <button onClick={updateSettings}>Save</button>
-      <a onClick={logOut} href="#">LOGOUT</a>
+      <span onClick={logOut} style={{ cursor: 'pointer', color: "blue" }}>LOGOUT</span>
     </div>
   );
 }

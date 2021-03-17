@@ -8,7 +8,7 @@ function MiniTodoList(props){
     const [todos, setTodos] = useState(startingTodos);
 
     const onAddTodo = (e) => {
-        let newTodo = {id: "" + parseInt(Math.random()*10000, 10), content: e.target.value};
+        let newTodo = {content: e.target.value};
         let newTodos = [ ...todos, newTodo];
         setTodos(newTodos);
         if( typeof props.onChangeTodos  !== 'undefined'){
@@ -16,13 +16,11 @@ function MiniTodoList(props){
         }
     };
 
-    const onChangeTodo = (currentTodo) =>{
-        console.log(currentTodo);
-        console.log(todos)
+    const onChangeTodo = (currentTodo, index) =>{
         let newTodos =[];
-        for(let t in todos){
-            if(t.id !== currentTodo.id){
-                newTodos.push(t);
+        for(let i=0; i<todos.length; i++){
+            if(i !== index){
+                newTodos.push(todos[i]);
             }else{
                 newTodos.push(currentTodo);
             }
@@ -34,21 +32,23 @@ function MiniTodoList(props){
     };
 
     const onRemoveTodo = (id) =>{
-        let remainingTodos = todos.filter((t)=> t.id !== id);
-        setTodos(remainingTodos);
+        console.log(id, todos[id]);
+        let todosLeft = todos.filter((t, indx)=> indx !== id);
+        console.log(todosLeft);
+        setTodos(todosLeft);
         if( typeof props.onChangeTodos  !== 'undefined'){
-            props.onChangeTodos(remainingTodos);
+            props.onChangeTodos(todosLeft);
         }
     };
     
 
     return (
         <div>
-            {todos.map((t) => {
-                console.log(t.id)
-                return <Todo 
-                id={t.id}
-                key={t.id}
+            {todos.map((t, indx) => {
+                console.log(t);
+                return <Todo
+                key={indx}
+                id={indx}
                 content={t.content} 
 
                 style={props.style}
