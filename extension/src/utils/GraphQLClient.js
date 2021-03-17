@@ -13,7 +13,7 @@ const cleanTypeName = new ApolloLink((operation, forward) => {
 });
 
 const httpLink = createHttpLink({
-  uri: process.env.NODE_ENV === "production" ? process.env.REACT_APP_PRODUCTION_SERVER : process.env.REACT_APP_DEVELOPMENT_SERVER,
+  uri: (process.env.NODE_ENV === "production" ? process.env.REACT_APP_PRODUCTION_SERVER : process.env.REACT_APP_DEVELOPMENT_SERVER) + "graphql",
 });
 
 const authLink = setContext((_, { headers }) => {

@@ -6,6 +6,8 @@ import jwt from 'express-jwt';
 import http from 'http';
 import mongoose from 'mongoose';
 import GraphQLController from './controllers/GraphQLController';
+import AWS from 'aws-sdk';
+import FileController from './controllers/FileController';
 
 class MainServer extends Server {
 
@@ -39,34 +41,62 @@ class MainServer extends Server {
     // REGISTER CONTROLLERS
     const ctlrInstances = [
       new GraphQLController(),
+      new FileController(),
     ];
     super.addControllers(ctlrInstances);
   }
 
-  private configureDB(callback: any): void {
+  private async startServer(): Promise<void> {
+    return new Promise((resolve, reject) => {
+      try {
+        const server = new http.Server(this.app);
+        server.listen(this.port);
+        resolve();
+      } catch (err) {
+        reject(err)
+      }
+    })
+  }
+
+  private async configureAWS(): Promise<void> {
+    return new Promise((resolve, reject) => {
+      AWS.config.getCredentials(err => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve()
+        }
+      })
+    })
+  }
+
+  private async configureDB(): Promise<typeof mongoose> {
     const connection =
       `mongodb+srv://${process.env.MONGODB_USER}:${process.env.MONGODB_PASSWORD}@${process.env.MONGODB_SERVER}`
-    mongoose.connect(connection,
+    return mongoose.connect(connection,
       {
         useNewUrlParser: true,
         useUnifiedTopology: true,
         useCreateIndex: true
       })
-      .then(() => {
-        Logger.Info('Connected succesfully to Mongo')
-        callback();
-      }).catch(err => {
-        Logger.Err(err)
-      });
   }
 
-  public start(): void {
-    this.configureDB(() => {
-      const server = new http.Server(this.app);
-      server.listen(this.port, () => {
+  public async start() {
+    this.configureDB()
+      .then(() => {
+        Logger.Info('Connected succesfully to Mongo')
+        return this.configureAWS();
+      })
+      .then(() => {
+        Logger.Info("AWS configured correctly", true);
+        return this.startServer();
+      })
+      .then(() => {
         Logger.Imp(MainServer.SERVER_START_MSG + this.port);
+      })
+      .catch(err => {
+        Logger.Err(err)
       });
-    })
   }
 }
 
