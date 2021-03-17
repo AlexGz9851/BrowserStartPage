@@ -171,10 +171,11 @@ function Note({ note, onRemoveNote, onChangeNote }) {
     if (titleTextAreaRef.current && contentTextAreaRef.current) {
       new ResizeObserver(() => {
         setWidth(titleTextAreaRef.current.style.width)
-
+        // TODO(alexgz9851): save into db
       }).observe(titleTextAreaRef.current)
       new ResizeObserver(() => {
         setWidth(contentTextAreaRef.current.style.width)
+        // TODO(alexgz9851): save into db
       }).observe(contentTextAreaRef.current)
     }
   }, [titleTextAreaRef, contentTextAreaRef])
