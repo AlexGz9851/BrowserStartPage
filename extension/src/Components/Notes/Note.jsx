@@ -143,6 +143,9 @@ function Note({ note, onRemoveNote, onChangeNote }) {
 
     function handleResize() {
       const element = noteHtmlNode.current;
+      if (!element) {
+        return
+      }
       if (window.innerWidth < (element.offsetLeft + element.offsetWidth + 15)) {
         let newLeft = (window.innerWidth - element.offsetWidth - 15);
         newLeft = newLeft < 0 ? 0 : newLeft;
