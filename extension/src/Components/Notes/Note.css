@@ -1,26 +1,27 @@
 .nota {
-    position: absolute;
-    z-index: 9;
-    width: 150px;
-    background-color: #333;
-    border: 1px solid #000;
-  }
+  position: absolute;
+  z-index: 9;
+  width: 150px;
+  background-color: #333;
+  border: 1px solid #000;
+}
   
-.nota-header {
-    text-align:center;
-    z-index: 10;
-    height: 38px;
-    min-height: 26px;
-    background-color: #444;
-    color: #ccc;
-    font-size: 16px;
-    font-style:normal;
-    font-weight: bold;
-    resize: vertical;
+textarea.nota-header {
+  height: 100% !important;
+}
 
-    width: 146px;
-    border: 0px solid #333;
-    
+.nota-header {
+  text-align:center;
+  z-index: 10;
+  min-height: 26px;
+  background-color: #444;
+  color: #ccc;
+  font-size: 16px;
+  font-style:normal;
+  font-weight: bold;
+  resize: vertical;
+  width: 146px;
+  border: 0px solid #333;
 }
 
 .nota-drag {
@@ -30,7 +31,6 @@
   height: 17px;
   background-color: #444;
   color: #ccc;
-
   width: 132px;
 }
 
@@ -41,6 +41,7 @@
   padding-left: 0px;
   margin: 0px;
 }
+
 .nota-close {
   z-index: 9;
   height: 15px;
@@ -59,22 +60,22 @@
 }
 
 .nota-content {
-    padding-left: 5px;
-    resize: vertical;
-    padding-right: 5px;
-    height: 70px;
-    min-height: 40px;
-    background-color: #333;
-    text-align: left;
-    font-size: 15px;
-    color:#ccc;
-    
-    font-style:oblique;
-    width: 140px;
-    border: 0px solid #333;
-    border-style:solid;
-  }
+  padding-left: 5px;
+  resize: vertical;
+  padding-right: 5px;
+  height: 70px;
+  min-height: 40px;
+  background-color: #333;
+  text-align: left;
+  font-size: 15px;
+  color:#ccc;
+  
+  font-style:oblique;
+  width: 140px;
+  border: 0px solid #333;
+  border-style:solid;
+}
 
-  textarea::placeholder {
-    color: #fff;  
-  }
+textarea::placeholder {
+  color: #fff;  
+}

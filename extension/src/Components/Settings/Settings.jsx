@@ -23,7 +23,7 @@ function Settings({ settings, setSettings, setLoggedIn, imgUrl }) {
       setSettings(data.updateSettings)
       setBackUp(data.updateSettings)
     }
-  }, [data, loading, called, backUp])
+  }, [data, loading, called, backUp, setSettings])
 
   const logOut = () => {
     setLoggedIn(false);

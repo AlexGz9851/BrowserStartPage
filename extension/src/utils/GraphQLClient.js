@@ -31,7 +31,18 @@ const authLink = setContext((_, { headers }) => {
 const GraphQLClient = new ApolloClient({
   link: ApolloLink.from([authLink, cleanTypeName, httpLink]),
   cache: new InMemoryCache({
-    addTypename: true
+    addTypename: true,
+    typePolicies: {
+      Note: {
+        fields: {
+          todo: {
+            merge(existing = [], incoming) {
+              return [...incoming];
+            },
+          }
+        }
+      }
+    }
   })
 });
 
