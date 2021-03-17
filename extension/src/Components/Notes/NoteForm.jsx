@@ -25,25 +25,24 @@ function NoteForm(props) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className='todo-form'>
-      <>
-        <input
-          name="isTodoList"
-          type="checkbox"
-          checked={noteType}
-          onChange={handleCheckbox} />
-        <input
-          placeholder='Add new Note'
-          value={input}
-          onChange={handleChange}
-          name='text'
-          className='todo-input'
-        />
-        <button onClick={handleSubmit} className='todo-button'>
-          Add Note!
+    <div className='todo-form'>
+      <input
+        name="isTodoList"
+        type="checkbox"
+        checked={noteType}
+        onChange={handleCheckbox} />
+      <input
+        placeholder='Add new Note'
+        value={input}
+        onChange={handleChange}
+        name='text'
+        className='todo-input'
+      />
+      <button onClick={handleSubmit} className='todo-button'>
+        Add Note!
               </button>
-      </>
-    </form>
+    </div>
+
   );
 }
 

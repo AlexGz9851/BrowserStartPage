@@ -191,11 +191,11 @@ function Note({ note, onRemoveNote, onChangeNote }) {
       ref={noteHtmlNode}
     >
       <div style={headerStyle} className="nota-header">
-        <div className="nota-drag"
+        <div className="nota-bar"
           style={dragStyle}
-          id={noteCopy._id + 'drag'}
-          onMouseDown={dragElement}
         >
+          <div className="nota-drag" id={noteCopy._id + 'drag'}
+            onMouseDown={dragElement}></div>
           <div className="nota-close"
             id={noteCopy._id + 'close'}
             onClick={handleCloseElement}
