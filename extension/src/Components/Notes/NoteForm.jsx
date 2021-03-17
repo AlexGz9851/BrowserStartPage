@@ -12,8 +12,6 @@ function NoteForm(props) {
   };
 
   const handleSubmit = e => {
-    e.preventDefault();
-
     props.onSubmit({
       title: input,
       type: (noteType ? NoteTypes.TODO : NoteTypes.NOTE),
@@ -23,7 +21,6 @@ function NoteForm(props) {
   };
 
   const handleCheckbox = e => {
-    e.preventDefault();
     setNoteType(e.target.checked);
   };
 
