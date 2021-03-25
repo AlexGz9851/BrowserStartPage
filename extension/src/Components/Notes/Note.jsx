@@ -212,7 +212,7 @@ function Note({ note, onRemoveNote, onChangeNote }) {
           name={noteCopy._id + 'title'}
           placeholder="Add a cool task here."
           style={titleStyle}
-          minRows={1}
+          minRows={2}
           maxRows={10}
           onBlur={(ev) => submitChanges(ev.target.value, "title")}
           onChange={(ev) => onChange(ev.target.value, "title")} />
