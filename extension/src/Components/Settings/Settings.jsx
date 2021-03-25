@@ -36,6 +36,12 @@ function Settings({ settings, setSettings, setLoggedIn, imgUrl }) {
     setSettings({ ...backUp })
   }
 
+  const clickUpdateSettings = () => {
+    updateSettings().catch(err => {
+      alert(err) /*TODO(LALO): Esto como una notificacion de error bonita*/
+    })
+  }
+
   return (
     <div className="settings">
       <label htmlFor="searchengine">Search engine:</label>
@@ -58,7 +64,7 @@ function Settings({ settings, setSettings, setLoggedIn, imgUrl }) {
       {/* <input type="text" name="bgImage" id="bgImage" value={tempSettings.backgroundImage} onChange={(ev) => setTempSettings({ ...tempSettings, backgroundImage: ev.target.value })} /> */}
       <label htmlFor="searchengine">Google token:</label>
       <input type="text" name="googleToken" id="googleToken" value={settings.googleToken} onChange={(ev) => setSettings({ ...settings, googleToken: ev.target.value })} />
-      <button onClick={updateSettings}>Save</button>
+      <button onClick={clickUpdateSettings}>Save</button>
       <button onClick={removeChanges}>Cancel</button>
       <span onClick={logOut} style={{ cursor: 'pointer', color: "blue" }}>LOGOUT</span>
     </div>

@@ -1,4 +1,4 @@
-import { GraphQLBoolean, GraphQLList, GraphQLNonNull, GraphQLString } from 'graphql';
+import { GraphQLList, GraphQLNonNull, GraphQLString } from 'graphql';
 import { addNote, getNote, getNotes, removeNote, updateNote } from '../../models/NoteModel';
 import NoteType from './types/Note.Type.gql';
 import NoteInputType from './types/NoteInput.Type.gql';

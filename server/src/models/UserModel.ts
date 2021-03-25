@@ -82,6 +82,16 @@ export async function login(username: string, password: string) {
 }
 
 export async function signUp(input: IUser) {
+  let err = "";
+  if (input.username.trim().length == 0) {
+    err += "User must have at least one character"
+  }
+  if (input.password.trim().length < 6) {
+    err += "Password must have at least 6 characters"
+  }
+  if (err.length != 0) {
+    throw new Error(err);
+  }
   const newSettings = await SettingsModel.create({});
   input.settings = newSettings;
   const newUser = await UserModel.create(input);

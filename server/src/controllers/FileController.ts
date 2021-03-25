@@ -70,7 +70,7 @@ class FileController {
       })
       .catch(err => {
         Logger.Err(`Unexpected error: ${err}`)
-        res.send({ success: false });
+        res.status(500).send({ success: false });
       })
   }
 

@@ -26,10 +26,18 @@ export default SettingsModel;
 
 import UserModel from './UserModel';
 
+async function getUserSettings(userId: Number) {
+  const user = await UserModel.findById(userId);
+  if (user) {
+    return user.settings
+  }
+  Logger.Err("Recieved request from user " + userId + ", but wasnt found in DB");
+  throw new Error('There was an error, please try again later.');
+}
+
 export async function getSettings(req: any) {
   if (req.user) {
-    const userId = req.user.id;
-    return (await UserModel.findById(userId))!.settings
+    return await getUserSettings(req.user.id);
   }
   throw new Error('Please login first');
 }
@@ -37,8 +45,13 @@ export async function getSettings(req: any) {
 export async function updateSettings(req: any, input: ISettings) {
   if (req.user) {
     const userId = req.user.id;
-    await UserModel.updateOne({ _id: userId }, { '$set': { 'settings': input } })
-    return (await UserModel.findById(userId))!.settings
+    try {
+      await UserModel.updateOne({ _id: userId }, { '$set': { 'settings': input } })
+    } catch (err) {
+      Logger.Err(err)
+      throw new Error('There was an error, please try again later.');
+    }
+    return await getUserSettings(req.user.id);
   }
   throw new Error('Please login first');
 }
