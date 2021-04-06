@@ -3,6 +3,7 @@
   min-height: 100vh;
   background-color: #cccccc;
   background-size: cover; 
+  font-size: 1rem;
 }
 
 .App a{

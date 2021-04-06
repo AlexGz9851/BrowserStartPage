@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import './Note.css';
 import { AiOutlineClose } from 'react-icons/ai';
 import TextareaAutosize from 'react-textarea-autosize';
-import MiniTodoList from '../MiniTodoList/MiniTodoList.jsx'
+import MiniTodoList from '../MiniTodoList'
 
 
 function Note({ note, onRemoveNote, onChangeNote }) {

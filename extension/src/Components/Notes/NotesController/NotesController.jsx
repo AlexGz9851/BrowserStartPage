@@ -67,24 +67,30 @@ function NotesController() {
   }, [notesResponse])
 
   const onAddNote = (n) => {
-    addNote({ variables: { note: n } })
+    addNote({ variables: { note: n } }).catch(err => {
+      alert(err) /*TODO(LALO): Esto como una notificacion de error bonita*/
+    })
   };
 
   const onChangeNote = (currentNote) => {
-    updateNote({ variables: { note: currentNote } })
+    updateNote({ variables: { note: currentNote } }).catch(err => {
+      alert(err) /*TODO(LALO): Esto como una notificacion de error bonita*/
+    })
   };
 
   const onRemoveNote = (_id) => {
-    removeNote({ variables: { noteId: _id } })
+    removeNote({ variables: { noteId: _id } }).catch(err => {
+      alert(err) /*TODO(LALO): Esto como una notificacion de error bonita*/
+    })
   };
 
   return (
     <div>
-      {(!notesResponse || notesResponse.loading) && "LOADING"}
-      {notesResponse.error && "ERROR" + notesResponse.error}
-      {addNoteResponse.error && "Error while adding"}
-      {updateNoteResponse.error && "Error while adding"}
-      {removeNoteResponse.error && "Error while adding"}
+      {(!notesResponse || notesResponse.loading) && "LOADING"} {/*TODO(LALO): Esto como un spinner bonito*/}
+      {notesResponse.error && "ERROR" + notesResponse.error} {/*TODO(LALO): Esto como una notificacion de error bonita*/}
+      {addNoteResponse.error && "Error while adding"} {/*TODO(LALO): Esto como una notificacion de error bonita*/}
+      {updateNoteResponse.error && "Error while adding"} {/*TODO(LALO): Esto como una notificacion de error bonita*/}
+      {removeNoteResponse.error && "Error while adding"} {/*TODO(LALO): Esto como una notificacion de error bonita*/}
       <NoteForm onSubmit={onAddNote} />
       {notes.map(note => <Note note={note}
         onRemoveNote={onRemoveNote}

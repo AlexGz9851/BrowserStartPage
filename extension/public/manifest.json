@@ -1,10 +1,10 @@
 {
   "name": "BrowserStartPage",
-  "description": "Build an Extension!",
+  "description": "New New Page Tab",
   "manifest_version": 2,
   "version": "1.0",
   "chrome_url_overrides": {
     "newtab": "./index.html"
   },
-  "content_security_policy": "script-src 'self' 'sha256-Y/Y7FkyP3vlzsrR0vmL1sOk0ygAY/1Za5cw6rywVFiM=' https://browser-start-page.herokuapp.com/; object-src 'self'"
+  "content_security_policy": "script-src 'self' 'sha256-Ss6ZIngyudyP7omkyWkqjkejLlgCWH5ksN7nSAyNQ48=' https://browser-start-page.herokuapp.com/; object-src 'self'"
 }

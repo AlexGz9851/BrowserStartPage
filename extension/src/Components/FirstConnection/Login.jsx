@@ -30,7 +30,7 @@ function LogIn({ setLoggedIn, setSettings }) {
 
   return (
     <div className="login">
-      {error ? <>{error.message}</> : <></>}
+      {error ? <>{error.message}</> : <></>} {/*TODO(LALO): Esto como una notificacion bonita*/}
       {loading ? "..." : <div>
         <input type="text" name="user" value={username} onChange={(ev) => setUsername(ev.target.value)} />
         <input type="password" name="password" value={password} onChange={(ev) => setPassword(ev.target.value)} />

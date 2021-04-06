@@ -23,6 +23,12 @@ function SignUp({ setLoggedIn, setSettings }) {
     variables: { user: { username, password } }
   });
 
+  const clickSignUp = () => {
+    signUp().catch(err => {
+      alert(err) /*TODO(LALO): Esto como una notificacion de error bonita*/
+    })
+  }
+
   useEffect(() => {
     if (!loading && data) {
       localStorage.setItem("token", data.signUp.jwt)
@@ -34,11 +40,11 @@ function SignUp({ setLoggedIn, setSettings }) {
 
   return (
     <div className="signup">
-      {error ? <>{error.message}</> : <></>}
+      {error ? <>{error.message}</> : <></>} {/*TODO(LALO): Esto como una notificacion de error bonita*/}
       {loading ? "..." : <div>
         <input type="text" name="user" value={username} onChange={(ev) => setUsername(ev.target.value)} />
         <input type="password" name="password" value={password} onChange={(ev) => setPassword(ev.target.value)} />
-        <input type="button" value="signup" onClick={signUp} />
+        <input type="button" value="signup" onClick={clickSignUp} />
       </div>
       }
 
