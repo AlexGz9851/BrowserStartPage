@@ -6,13 +6,23 @@
   border: 1px solid #000;
 }
 
+.nota-todo {
+  position: absolute;
+  z-index: 9;
+  width: 250px;
+  background-color: #333;
+  border: 1px solid #000;
+}
+
 .nota-header {
-  padding: 0 5px;
+  height: "100%";
+  padding: 0 0px;
 }
 
 .nota-header-content {
   text-align:center;
   z-index: 10;
+  margin: 0 0px;
   min-height: 26px;
   background-color: #444;
   color: #ccc;
@@ -20,7 +30,7 @@
   font-style:normal;
   font-weight: bold;
   resize: vertical;
-  width: 100%;
+  width: 95%;
   border: 0px solid #333;
 }
 
@@ -40,8 +50,9 @@
 .icon {
   height: 15px;
   padding-bottom: 2px;
-  padding-right: 4px;
+  padding-right: 0px;
   padding-left: 0px;
+  padding-top: 0;
   margin: 0px;
 }
 
@@ -70,7 +81,23 @@
   color:#ccc;
   
   font-style:oblique;
-  width: 140px;
+  width: 90%;
+  border: 0px solid #333;
+  border-style:solid;
+}
+
+.nota-content-todo {
+  padding: 0 5px;
+  resize: both;
+  height: 70px;
+  min-height: 40px;
+  background-color: #333;
+  text-align: left;
+  font-size: 15px;
+  color:#ccc;
+  
+  font-style:oblique;
+  width: 90%;
   border: 0px solid #333;
   border-style:solid;
 }
