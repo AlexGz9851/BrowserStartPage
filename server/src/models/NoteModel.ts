@@ -20,6 +20,7 @@ export interface INote extends BaseTimeDocument {
   todo: IToDo[];
   posX: string;
   posY: string;
+  width: string;
 }
 
 export const ToDoSchema = new Schema({
@@ -34,6 +35,7 @@ export const NoteSchema = new Schema({
   todo: { type: [ToDoSchema] },
   posX: { type: String, required: true, default: '0px' },
   posY: { type: String, required: true, default: '0px' },
+  width: { type: String, required: true, default: '' },
   ...BaseTimeSchema
 });
 

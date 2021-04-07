@@ -32,6 +32,9 @@ const NoteType = new GraphQLObjectType({
     posY: {
       type: GraphQLNonNull(GraphQLString)
     },
+    width: {
+      type: GraphQLString
+    },
     createdAt: {
       type: GraphQLNonNull(DateType)
     },

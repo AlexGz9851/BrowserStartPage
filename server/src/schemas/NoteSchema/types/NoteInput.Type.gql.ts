@@ -36,6 +36,9 @@ const NoteInputType = new GraphQLInputObjectType({
     },
     updatedAt: {
       type: DateType
+    },
+    width: {
+      type: GraphQLString
     }
   }),
 });
