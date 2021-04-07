@@ -42,7 +42,7 @@ export const NoteSchema = new Schema({
 const NoteModel = model<INote>('Note', NoteSchema);
 export default NoteModel;
 
-async function getUserNotes(userId: Number) {
+async function getUserNotes(userId: number) {
   const user = await UserModel.findById(userId);
   if (user) {
     return user.notes

@@ -26,7 +26,7 @@ export default SettingsModel;
 
 import UserModel from './UserModel';
 
-async function getUserSettings(userId: Number) {
+async function getUserSettings(userId: number) {
   const user = await UserModel.findById(userId);
   if (user) {
     return user.settings
