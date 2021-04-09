@@ -7,7 +7,6 @@ import MiniTodoList from '../MiniTodoList'
 
 function Note({ note, onRemoveNote, onChangeNote }) {
   const [noteCopy, setNoteCopy] = useState(note);
-  const [width, setWidth] = useState()
   const NoteTypes = { "TODO": "TODO", "NOTE": "NOTE" }
   const noteHtmlNode = useRef(null);
   const titleTextAreaRef = useRef(null);
@@ -18,6 +17,9 @@ function Note({ note, onRemoveNote, onChangeNote }) {
     width: window.innerWidth
   }
 
+  // is it necesary to check if noteCopy.width is a valid value?
+  //let initialWidth = note.type === NoteTypes.TODO ? "250px" : "150px";
+  //initialWidth =  ? "250px" : "150px";
   let textColors = ["#ccc", "#d7b2FF", "#FBD5EC", "#A7DDFA", "#eeffee", "#41402E", "#FFEDC0"];
   let backgroundColors = ["#333", "#442666", "#7A4364", "#2D5F7A", "#2FA853", "#E6E34C", '#8F4623'];
   let headerColors = ["#444", "#695580", "#C76DA3", "#4897C2", "#5EA86C", "#ADAC51", "#E68550"];
@@ -46,7 +48,7 @@ function Note({ note, onRemoveNote, onChangeNote }) {
     top: newPosY,
     left: newPosX,
     backgroundColor: backgroundColors[intId],
-    width: ""+(parseInt(width,10)*1.06)+"px"
+    width: ""+(parseInt(noteCopy.width,10)+ 10)+"px"
   };
 
   const noteStyleTodo = {
@@ -59,7 +61,7 @@ function Note({ note, onRemoveNote, onChangeNote }) {
   const headerStyle = {
     backgroundColor: headerColors[intId],
     color: textColors[intId],
-    width: ""+(parseInt(width,10)*1.06)+"px"
+    width: ""+(parseInt(noteCopy.width,10)+ 10)+"px"
   };
 
   const headerTodoStyle = {
@@ -70,7 +72,7 @@ function Note({ note, onRemoveNote, onChangeNote }) {
   const titleStyle = {
     backgroundColor: headerColors[intId],
     color: textColors[intId],
-    width: width
+    width: noteCopy.width
   };
 
   const titleStyleTodo = {
@@ -87,7 +89,7 @@ function Note({ note, onRemoveNote, onChangeNote }) {
   const contentStyle = {
     backgroundColor: backgroundColors[intId],
     color: textColors[intId],
-    width: width
+    width: noteCopy.width
   };
 
   const submitChanges = (val, field) => {
@@ -123,8 +125,23 @@ function Note({ note, onRemoveNote, onChangeNote }) {
       pos3 = e.clientX;
       pos4 = e.clientY;
       // set the element's new position:
-      elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
-      elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
+      let newTop = (elmnt.offsetTop - pos2);
+      let newLeft = (elmnt.offsetLeft - pos1);
+      if(newTop < 0){
+        newTop = 0;
+      }else if(newTop > (window.innerHeight - elmnt.offsetHeight- 5)){
+        newTop = (window.innerHeight - elmnt.offsetHeight - 5);
+      }
+      console.log(elmnt.offsetHeight, elmnt.offsetWidth);
+
+      if(newLeft < 0){
+        newLeft = 0;
+      }else if(newLeft > (window.innerWidth- elmnt.offsetWidth -5)){
+        newLeft = (window.innerWidth - elmnt.offsetWidth -5);
+      }
+
+      elmnt.style.top = newTop + "px";
+      elmnt.style.left = newLeft + "px";
     }
 
     function closeDragElement() {
@@ -178,23 +195,27 @@ function Note({ note, onRemoveNote, onChangeNote }) {
 
   });
 
+  /*
   useEffect(() => {
     if (titleTextAreaRef?.current && contentTextAreaRef?.current) {
       new ResizeObserver(() => {
         if (titleTextAreaRef?.current) {
-          setWidth(titleTextAreaRef.current.style.width)
-
+          console.log(contentTextAreaRef.current.style.width);
+          onChange(titleTextAreaRef.current.style.width, "width")
+          submitChanges(titleTextAreaRef.current.style.width, "width")
         }
-        // TODO(alexgz9851): save into db
+        console.log(note)
       }).observe(titleTextAreaRef.current)
       new ResizeObserver(() => {
         if (contentTextAreaRef?.current) {
-          setWidth(contentTextAreaRef.current.style.width)
+          console.log(contentTextAreaRef.current.style.width);
+          onChange(contentTextAreaRef.current.style.width, "width")
+          submitChanges(contentTextAreaRef.current.style.width, "width")
         }
-        // TODO(alexgz9851): save into db
+        console.log(note)
       }).observe(contentTextAreaRef.current)
     }
-  }, [titleTextAreaRef, contentTextAreaRef])
+  }, [titleTextAreaRef, contentTextAreaRef])*/
 
   return (
     <>
@@ -261,7 +282,7 @@ function Note({ note, onRemoveNote, onChangeNote }) {
           value={noteCopy.content || ""}
           id={noteCopy._id + 'content'}
           name={noteCopy._id + 'content'}
-          minRows={3}
+          minRows={1}
           maxRows={50}
           placeholder="What's the task about?"
           style={contentStyle}

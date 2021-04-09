@@ -7,6 +7,7 @@ fragment NoteFields on Note {
   type,
   content,
   posX, posY,
+  width,
   todo {content, done}
 }`
 
