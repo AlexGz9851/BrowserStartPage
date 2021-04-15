@@ -84,6 +84,10 @@ function NotesController() {
     })
   };
 
+  const updateNotes = (note, index, val, field) => {
+    let noteCopy = { ...note, [field]: val }
+    setNotes([...notes.slice(0, index), noteCopy, ...notes.slice(index + 1)])
+  }
   return (
     <div>
       {(!notesResponse || notesResponse.loading) && "LOADING"} {/*TODO(LALO): Esto como un spinner bonito*/}
@@ -92,10 +96,11 @@ function NotesController() {
       {updateNoteResponse.error && "Error while adding"} {/*TODO(LALO): Esto como una notificacion de error bonita*/}
       {removeNoteResponse.error && "Error while adding"} {/*TODO(LALO): Esto como una notificacion de error bonita*/}
       <NoteForm onSubmit={onAddNote} />
-      {notes.map(note => <Note note={note}
+      {notes.map((note, i) => <Note note={note}
         onRemoveNote={onRemoveNote}
         onChangeNote={onChangeNote}
-        key={note._id} />)}
+        key={note._id}
+        updateNote={(val, field) => { updateNotes(note, i, val, field) }} />)}
     </div>
   );
 }
