@@ -12,7 +12,14 @@ class GraphQLController {
     const startTime = Date.now();
     graphqlHTTP({
       schema: graphqlSchema,
-      graphiql: true
+      graphiql: true,
+      customFormatErrorFn: (err) => {
+        const code = new Date().getTime();
+        Logger.Err(`${code} -- ${err}`)
+        return {
+          message: `There was an error on our side! If you continue seeing this message please report the bug with code: ${code}`
+        };
+      }
     })(req, res);
   }
 

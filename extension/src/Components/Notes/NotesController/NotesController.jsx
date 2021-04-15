@@ -66,22 +66,23 @@ function NotesController() {
     }
   }, [notesResponse])
 
+  const handleError = (err) => {
+    if (err.networkError?.result?.errors?.length > 0) {
+      err = err.networkError.result.errors[0]
+    }
+    alert(err.message) /*TODO(LALO): Esto como una notificacion de error bonita*/
+  }
+
   const onAddNote = (n) => {
-    addNote({ variables: { note: n } }).catch(err => {
-      alert(err) /*TODO(LALO): Esto como una notificacion de error bonita*/
-    })
+    addNote({ variables: { note: n } }).catch(handleError)
   };
 
   const onChangeNote = (currentNote) => {
-    updateNote({ variables: { note: currentNote } }).catch(err => {
-      alert(err) /*TODO(LALO): Esto como una notificacion de error bonita*/
-    })
+    updateNote({ variables: { note: currentNote } }).catch(handleError)
   };
 
   const onRemoveNote = (_id) => {
-    removeNote({ variables: { noteId: _id } }).catch(err => {
-      alert(err) /*TODO(LALO): Esto como una notificacion de error bonita*/
-    })
+    removeNote({ variables: { noteId: _id } }).catch(handleError)
   };
 
   const updateNotes = (note, index, data) => {
