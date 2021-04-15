@@ -143,8 +143,7 @@ function Note({ note, onRemoveNote, onChangeNote, updateNote }) {
       // stop moving when mouse button is released:
       const posX = elmnt.style.left;
       const posY = elmnt.style.top;
-      updateNote(posX, "posX")
-      updateNote(posY, "posY")
+      updateNote({ posX, posY })
       onChangeNote({ _id: note._id, "posX": posX, "posY": posY });
       document.onmouseup = null;
       document.onmousemove = null;
@@ -191,7 +190,7 @@ function Note({ note, onRemoveNote, onChangeNote, updateNote }) {
 
   useResizeObserver(titleTextAreaRef.current, () => {
     if (titleTextAreaRef?.current) {
-      updateNote(titleTextAreaRef.current.style.width, "width")
+      updateNote({ width: titleTextAreaRef.current.style.width })
     }
   })
 
@@ -221,7 +220,7 @@ function Note({ note, onRemoveNote, onChangeNote, updateNote }) {
               minRows={1}
               maxRows={10}
               onBlur={(ev) => submitChanges(ev.target.value, "title")}
-              onChange={(ev) => updateNote(ev.target.value, "title")} />
+              onChange={(ev) => updateNote({ title: ev.target.value })} />
           </div>
           <MiniTodoList className='nota-content-todo'
             todos={note.todo}
@@ -253,7 +252,7 @@ function Note({ note, onRemoveNote, onChangeNote, updateNote }) {
               minRows={1}
               maxRows={10}
               onBlur={(ev) => submitChanges(ev.target.value, "title")}
-              onChange={(ev) => updateNote(ev.target.value, "title")} />
+              onChange={(ev) => updateNote({ title: ev.target.value })} />
           </div>
           <TextareaAutosize className='nota-content' type="text"
             ref={contentTextAreaRef}
@@ -265,7 +264,7 @@ function Note({ note, onRemoveNote, onChangeNote, updateNote }) {
             placeholder="What's the task about?"
             style={contentStyle}
             onBlur={(ev) => submitChanges(ev.target.value, "content")}
-            onChange={(ev) => updateNote(ev.target.value, "content")} />
+            onChange={(ev) => updateNote({ content: ev.target.value })} />
         </div >
       }
     </>

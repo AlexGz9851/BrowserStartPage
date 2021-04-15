@@ -84,8 +84,8 @@ function NotesController() {
     })
   };
 
-  const updateNotes = (note, index, val, field) => {
-    let noteCopy = { ...note, [field]: val }
+  const updateNotes = (note, index, data) => {
+    let noteCopy = { ...note, ...data }
     setNotes([...notes.slice(0, index), noteCopy, ...notes.slice(index + 1)])
   }
   return (
@@ -100,7 +100,7 @@ function NotesController() {
         onRemoveNote={onRemoveNote}
         onChangeNote={onChangeNote}
         key={note._id}
-        updateNote={(val, field) => { updateNotes(note, i, val, field) }} />)}
+        updateNote={(data) => { updateNotes(note, i, data) }} />)}
     </div>
   );
 }
