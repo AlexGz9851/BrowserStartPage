@@ -6,7 +6,8 @@ import { useState } from 'react';
 import Settings from './Components/Settings/Settings';
 import SearchEngine from './Components/SearchEngine/SearchEngine'
 import NotesController from './Components/Notes/NotesController';
-import DateTimeClock from './Components/DateTime/DateTimeClock'
+import DateTimeClock from './Components/DateTime/DateTimeClock';
+import MyCalendar from './Components/MyCalendar/MyCalendar';
 
 function App() {
   const [loggedIn, setLoggedIn] = useState(localStorage.getItem('token') != null);
@@ -28,6 +29,7 @@ function App() {
           {showSettings ? <Settings settings={settings} setSettings={setSettings} setLoggedIn={setLoggedIn} imgUrl={imgUrl} /> : <></>}
           <DateTimeClock />
           <SearchEngine searchEngine={settings.searchEngine} />
+          <MyCalendar />
         </div> : <FirstConnection setLoggedIn={setLoggedIn} setSettings={setSettings} />}
     </ApolloProvider>
 
