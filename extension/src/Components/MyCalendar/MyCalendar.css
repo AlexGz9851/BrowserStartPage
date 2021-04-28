@@ -1,0 +1,72 @@
+div.scheduler-view {
+  border: none;
+  
+}
+
+table.scheduler {
+  background-color: #444;
+  border-collapse: collapse;
+  border-radius: 1em;
+  max-width: 1440px;
+}
+
+table.scheduler > thead{
+  display:none
+}
+
+table.scheduler > tbody > tr > td:first-child {
+  width:0% !important;
+}
+
+.resource-view{
+  display: none;
+}
+
+.ant-popover-inner{
+  background-color: #333;
+  border-style: solid;
+  border-color: #ddd;
+}
+.ant-popover-placement-bottomLeft >.ant-popover-content>div.ant-popover-arrow {
+  top:3px;
+  border-top-color: #ddd;
+  border-left-color: #ddd;
+  border-right-color: transparent;
+  border-bottom-color: transparent;
+}
+
+
+th.header3-text {
+  font-size: x-small;
+}
+
+th.header3-text > div{
+  top:0;
+  float:left;
+  margin: 0 5px;
+}
+
+.scheduler-bg-table>thead>tr{
+  border-bottom: none
+}
+
+div.scheduler-view>div {
+  border: none !important;
+  
+}
+
+.scheduler-bg-table>tbody>tr{
+  border: none;
+}
+
+.scheduler-bg-table>tbody>tr>td{
+  border-bottom: none;
+}
+
+.scheduler-bg-table>tbody>tr>td:nth-child(odd){
+  border: none;
+}
+
+.scheduler-view>div:first-child>div{
+  overflow: auto !important;
+}

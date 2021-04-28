@@ -1,16 +1,26 @@
 import React from 'react';
-import { Calendar, momentLocalizer } from 'react-big-calendar';
+import Scheduler, { SchedulerData, ViewTypes } from 'react-big-scheduler'
+import 'react-big-scheduler/lib/css/style.css'
+import { DragDropContext } from 'react-dnd'
+import HTML5Backend from 'react-dnd-html5-backend'
 import moment from 'moment';
-import 'react-big-calendar/lib/css/react-big-calendar.css';
+import './MyCalendar.css'
+import SchedulerConfig from './SchedulerConfig';
 
 class MyCalendar extends React.Component {
   constructor(props) {
     super(props);
+    const schedulerData = new SchedulerData(new Date(), ViewTypes.Day, false, false, SchedulerConfig);
+    schedulerData.setResources([{
+      id: 'r0',
+      name: 'events'
+    }])
+    schedulerData.setLocaleMoment(moment);
     this.state = {
-      localizer: momentLocalizer(moment),
       myEventsList: [
       ],
       isSignedIn: false,
+      viewModel: schedulerData
     };
     this.listUpcomingEvents = this.listUpcomingEvents.bind(this);
     this.iniciarSesion = this.iniciarSesion.bind(this);
@@ -19,9 +29,11 @@ class MyCalendar extends React.Component {
 
 
   listUpcomingEvents() {
+    const date = new Date()
+    date.setHours(0, 0, 0, 0)
     window.gapi.client.calendar.events.list({
       'calendarId': 'primary',
-      'timeMin': (new Date()).toISOString(),
+      'timeMin': date.toISOString(),
       'showDeleted': false,
       'singleEvents': true,
       'maxResults': 10,
@@ -40,13 +52,12 @@ class MyCalendar extends React.Component {
           end_time = events[i]["start"]["date"] + "T23:59:59-00:00"
         }
         obj['title'] = events[i]["summary"];
-        obj['start'] = new Date(start_time.substr(0, start_time.length - 6));
-        obj['end'] = new Date(end_time.substr(0, end_time.length - 6));
-        dict.push(obj);
+        obj['start'] = start_time.substr(0, start_time.length - 6);
+        obj['end'] = end_time.substr(0, end_time.length - 6);
+        obj.id = i;
+        obj.resourceId = 'r0'
+        this.state.viewModel.addEvent(obj)
       }
-      this.setState({
-        myEventsList: dict
-      })
     });
   }
 
@@ -86,11 +97,8 @@ class MyCalendar extends React.Component {
       clientId: '897082507710-h3ok2o6pt568cdpfi1lsfkhv930nhga0.apps.googleusercontent.com',
       discoveryDocs: ["https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest"],
       scope: "https://www.googleapis.com/auth/calendar.readonly"
-    }).then(function () {
-      console.log('Gapi started');
     });
   }
-
 
 
   render() {
@@ -108,18 +116,17 @@ class MyCalendar extends React.Component {
               <button id="iniciarSesion" onClick={this.iniciarSesion}>Iniciar sesion</button>
             </div>
         }
-        <div style={{ width: "200px", height: "600px" }}>
-          <Calendar
-            localizer={this.state.localizer}
-            events={this.state.myEventsList}
-            defaultDate={new Date()}
-            defaultView="day"
-            toolbar={false}
-          />
-        </div>
+        <Scheduler
+          schedulerData={this.state.viewModel}
+          prevClick={() => { }}
+          nextClick={() => { }}
+          onSelectDate={() => { }}
+          onViewChange={() => { }}
+          eventItemClick={() => { }}
+        />
       </div>
     );
   }
 }
 
-export default MyCalendar;
+export default DragDropContext(HTML5Backend)(MyCalendar);
