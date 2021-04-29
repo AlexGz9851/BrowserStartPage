@@ -1,7 +1,28 @@
 import { useState } from 'react';
+import { makeStyles } from '@material-ui/core/styles';
+import { IconButton, TextField} from '@material-ui/core';
+import SearchIcon from '@material-ui/icons/Search';
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    padding: '2px 4px',
+    display: 'flex',
+    alignItems: 'center',
+    width: 400,
+  },
+  input: {
+    marginLeft: theme.spacing(1),
+    flex: 1,
+    width: '50%',
+  },
+  iconButton: {
+    padding: 10,
+  },
+}));
 
 function SeachEngine({ searchEngine }) {
   const [query, setQuery] = useState("")
+  const classes = useStyles();
 
   const search = () => {
     let url = ""
@@ -24,8 +45,15 @@ function SeachEngine({ searchEngine }) {
 
   return (
     <div className="searchEngine">
-      <input type="text" name="search" placeholder="Search here!" value={query} onChange={ev => setQuery(ev.target.value)} />
-      <button onClick={search}>search</button>
+      <TextField 
+        id="standard-basic" 
+        label="Search here!" 
+        value={query} 
+        className={classes.input}  
+        onChange={ev => setQuery(ev.target.value)}/>
+      <IconButton style={{color:'white'}} className={classes.iconButton} onClick={search}>
+        <SearchIcon />
+      </IconButton>   
     </div>
   );
 }

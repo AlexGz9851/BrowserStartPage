@@ -1,5 +1,6 @@
 import { useLazyQuery, gql } from '@apollo/client';
 import { useState, useEffect } from 'react';
+import { Card, Button, Divider, TextField } from "@material-ui/core";
 
 const LOGIN = gql`query login($user: LoginInput!){
   login(user: $user) {
@@ -29,18 +30,36 @@ function LogIn({ setLoggedIn, setSettings }) {
   }, [data, called, loading, error, setLoggedIn, setSettings])
 
   return (
-    <div className="login">
+    <div>
       {error ? <>{error.message}</> : <></>} {/*TODO(LALO): Esto como una notificacion bonita*/}
-      {loading ? "..." : <div>
-        <input type="text" name="user" value={username} onChange={(ev) => setUsername(ev.target.value)} />
-        <input type="password" name="password" value={password} onChange={(ev) => setPassword(ev.target.value)} />
-        <input type="button" value="login" onClick={() => {
-          login({
-            variables: { user: { username, password } }
-          })
-        }} />
-      </div>
+      {loading ? "..." :
+        <div style={{ maxWidth: 345, textAlign: "center" }}>
+          <TextField
+            id="standard-password-input"
+            label="Username"
+            style={{ marginBottom: 10 }}
+            onChange={(ev) => setUsername(ev.target.value)}
+            value={username}
+          />
+          <TextField
+            id="standard-password-input"
+            label="Password"
+            type="password"
+            onChange={(ev) => setPassword(ev.target.value)}
+            value={password}
+          />
+          <div>
+            <Button variant="contained" style={{ marginBottom: 20, marginTop: 20 }} onClick={() => { login({ variables: { user: { username, password } } }) }}>
+              Login
+        </Button>
+            <Divider />
+            <Button variant="contained" style={{ marginBottom: 20, marginTop: 20 }}>
+              Google!
+        </Button>
+          </div>
+        </div>
       }
+
 
     </div>
   );

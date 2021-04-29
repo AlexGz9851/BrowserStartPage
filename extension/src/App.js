@@ -25,14 +25,15 @@ function App() {
       {loggedIn ?
         <div className="App" style={style}>
           <NotesController />
-          <span onClick={() => { setShowSettings(!showSettings) }} style={{ cursor: 'pointer', color: "blue" }}>SETTINGS</span>
-          {showSettings ? <Settings settings={settings} setSettings={setSettings} setLoggedIn={setLoggedIn} imgUrl={imgUrl} /> : <></>}
           <DateTimeClock />
           <SearchEngine searchEngine={settings.searchEngine} />
           <MyCalendar />
-        </div> : <FirstConnection setLoggedIn={setLoggedIn} setSettings={setSettings} />}
+        </div> : 
+        <div>
+          <FirstConnection setLoggedIn={setLoggedIn} setSettings={setSettings} />
+        </div>
+        }
     </ApolloProvider>
-
   );
 }
 

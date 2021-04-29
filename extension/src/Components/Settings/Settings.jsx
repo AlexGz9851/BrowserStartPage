@@ -1,6 +1,16 @@
 import { useMutation, gql } from '@apollo/client';
 import { useEffect, useState } from 'react';
 import GraphQLClient from '../../utils/GraphQLClient';
+import { makeStyles, withStyles } from '@material-ui/core/styles';
+import {
+  IconButton, Button, Dialog,
+  Typography, InputLabel, FormControl, Select, TextField
+} from '@material-ui/core';
+import MuiDialogTitle from '@material-ui/core/DialogTitle';
+import MuiDialogContent from '@material-ui/core/DialogContent';
+import MuiDialogActions from '@material-ui/core/DialogActions';
+import CloseIcon from '@material-ui/icons/Close';
+import { grey, indigo } from "@material-ui/core/colors";
 
 const UPDATESETTINGS = gql`mutation updateSettings($settings: SettingsInput!){
   updateSettings(settings: $settings) {
@@ -10,12 +20,85 @@ const UPDATESETTINGS = gql`mutation updateSettings($settings: SettingsInput!){
   }
 }`
 
-function Settings({ settings, setSettings, setLoggedIn, imgUrl }) {
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    padding: '2px 4px',
+    display: 'flex',
+    alignItems: 'center',
+    width: 400,
+    backgroundColor: grey[900]
+  },
+  input: {
+    color: 'white',
+    marginLeft: theme.spacing(1),
+    flex: 1,
+  },
+  iconButton: {
+    padding: 10,
+  },
+  divider: {
+    height: 28,
+    margin: 4,
+    backgroundColor: 'white'
+  },
+  formControl: {
+    margin: theme.spacing(1),
+    minWidth: 400,
+  },
+  selectEmpty: {
+    marginTop: theme.spacing(2),
+  },
+}));
+
+const styles = (theme) => ({
+  root: {
+    margin: 0,
+    padding: theme.spacing(2),
+  },
+  closeButton: {
+    position: 'absolute',
+    right: theme.spacing(1),
+    top: theme.spacing(1),
+    color: grey[500],
+  },
+});
+
+const DialogTitle = withStyles(styles)((props) => {
+  const { children, classes, onClose, ...other } = props;
+  return (
+    <MuiDialogTitle disableTypography className={classes.root} {...other}>
+      <Typography variant="h6">{children}</Typography>
+      {onClose ? (
+        <IconButton aria-label="close" className={classes.closeButton} onClick={onClose}>
+          <CloseIcon />
+        </IconButton>
+      ) : null}
+    </MuiDialogTitle>
+  );
+});
+
+const DialogContent = withStyles((theme) => ({
+  root: {
+    padding: theme.spacing(2),
+  },
+}))(MuiDialogContent);
+
+const DialogActions = withStyles((theme) => ({
+  root: {
+    margin: 0,
+    padding: theme.spacing(1),
+  },
+}))(MuiDialogActions);
+
+function Settings({ settings, setSettings, setLoggedIn, imgUrl, open, setOpen }) {
   const [updateSettings, { called, loading, data }] = useMutation(UPDATESETTINGS, {
     variables: { settings }
   });
   const [backUp, setBackUp] = useState({ ...settings })
+  const [state, setState] = useState(settings.searchEngine);
   const token = localStorage.getItem('token');
+  const classes = useStyles();
 
   useEffect(() => {
     if (!loading && data && called) {
@@ -42,17 +125,56 @@ function Settings({ settings, setSettings, setLoggedIn, imgUrl }) {
     })
   }
 
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleChangeSelect = (event) => {
+    setState(event.target.value);
+    setSettings({ ...settings, searchEngine: event.target.value });
+  };
+
   return (
     <div className="settings">
-      <label htmlFor="searchengine">Search engine:</label>
-      <select name="searchengine" id="searchengine" value={settings.searchEngine} onChange={(ev) => setSettings({ ...settings, searchEngine: ev.target.value })}>
-        <option value="GOOGLE">Google</option>
-        <option value="DUCKDUCKGO">Duck duck go</option>
-        <option value="YAHOO">Yahoo</option>
-        <option value="BING">Bing</option>
-      </select>
-      <label htmlFor="bgImage">Background image:</label>
-      <input id="bgImage" name="bgImage" type="file" onChange={ev => {
+      <label htmlFor="searchengine">Google token:</label>
+      <input type="text" name="googleToken" id="googleToken" value={settings.googleToken} onChange={(ev) => setSettings({ ...settings, googleToken: ev.target.value })} />
+      <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={open}>
+        <DialogTitle onClose={handleClose}>
+          <Typography style={{ color: 'black' }} >
+            Settings
+          </Typography>
+        </DialogTitle>
+        <DialogContent dividers>
+          <Typography style={{ color: 'black' }}>
+            Select Search Engine:
+          </Typography>
+          <FormControl variant="outlined" className={classes.formControl}>
+            <InputLabel>Engine</InputLabel>
+            <Select
+              native
+              value={state}
+              onChange={handleChangeSelect}
+              label="Engine"
+              inputProps={{ name: 'engine', id: 'outlined-age-native-simple' }}
+            >
+              <option value={"GOOGLE"}>Google</option>
+              <option value={"DUCKDUCKGO"}>Duck duck go</option>
+              <option value={"YAHOO"}>Yahoo</option>
+              <option value={"BING"}>Bing</option>
+            </Select>
+          </FormControl>
+          <Typography style={{ color: 'black' }}>
+            Change Background:
+          </Typography>
+          <div style={{ textAlign: 'center' }}>
+            <TextField
+              style={{ minWidth: 300 }}
+              id="outlined-size-small"
+              defaultValue="Choose Image"
+              variant="outlined"
+              size="small"
+            />
+            <Button variant="outlined"onChange={ev => {
         const formData = new FormData();
         formData.append("image", ev.target.files[0]);
         fetch(imgUrl, { method: "POST", body: formData, headers: { "Authorization": "Bearer " + token } })
@@ -60,13 +182,31 @@ function Settings({ settings, setSettings, setLoggedIn, imgUrl }) {
           .then(data => {
             setSettings({ ...settings, backgroundImage: data.id })
           })
-      }} />
-      {/* <input type="text" name="bgImage" id="bgImage" value={tempSettings.backgroundImage} onChange={(ev) => setTempSettings({ ...tempSettings, backgroundImage: ev.target.value })} /> */}
-      <label htmlFor="searchengine">Google token:</label>
-      <input type="text" name="googleToken" id="googleToken" value={settings.googleToken} onChange={(ev) => setSettings({ ...settings, googleToken: ev.target.value })} />
-      <button onClick={clickUpdateSettings}>Save</button>
-      <button onClick={removeChanges}>Cancel</button>
-      <span onClick={logOut} style={{ cursor: 'pointer', color: "blue" }}>LOGOUT</span>
+      }} >
+              Browse
+          </Button>
+          </div>
+          <Typography gutterBottom>
+            Connect with Google:
+          </Typography>
+          <div style={{ textAlign: "center" }}>
+            <Button variant="outlined">
+              Google!
+          </Button>
+          </div>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={logOut} color="secondary" variant="contained" >
+            Log Out
+          </Button>
+          <Button onClick={removeChanges} color="default" variant="contained">
+            Cancel
+          </Button>
+          <Button onClick={clickUpdateSettings} color="primary" variant="contained" style={{ backgroundColor: indigo[400] }}>
+            Save changes
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 }
