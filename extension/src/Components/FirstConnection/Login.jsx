@@ -1,5 +1,12 @@
+import React, { useState, useEffect } from "react";
 import { useLazyQuery, gql } from '@apollo/client';
-import { useState, useEffect } from 'react';
+import { Button, Divider, TextField } from "@material-ui/core";
+import Snackbar from '@material-ui/core/Snackbar';
+import MuiAlert from '@material-ui/lab/Alert';
+
+function Alert(props) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
 
 const LOGIN = gql`query login($user: LoginInput!){
   login(user: $user) {
@@ -17,7 +24,7 @@ const LOGIN = gql`query login($user: LoginInput!){
 function LogIn({ setLoggedIn, setSettings }) {
   const [username, setUsername] = useState("test");
   const [password, setPassword] = useState("test");
-  const [login, { called, error, loading, data }] = useLazyQuery(LOGIN)
+  const [login, { called, error, loading, data }] = useLazyQuery(LOGIN);
 
   useEffect(() => {
     if (called && !loading && data && !error) {
@@ -29,18 +36,42 @@ function LogIn({ setLoggedIn, setSettings }) {
   }, [data, called, loading, error, setLoggedIn, setSettings])
 
   return (
-    <div className="login">
-      {error ? <>{error.message}</> : <></>} {/*TODO(LALO): Esto como una notificacion bonita*/}
-      {loading ? "..." : <div>
-        <input type="text" name="user" value={username} onChange={(ev) => setUsername(ev.target.value)} />
-        <input type="password" name="password" value={password} onChange={(ev) => setPassword(ev.target.value)} />
-        <input type="button" value="login" onClick={() => {
-          login({
-            variables: { user: { username, password } }
-          })
-        }} />
-      </div>
+    <div>
+      {loading ? "..." :
+        <div style={{ maxWidth: 345, textAlign: "center" }}>
+          <TextField
+            id="standard-password-input"
+            label="Username"
+            style={{ marginBottom: 10 }}
+            onChange={(ev) => setUsername(ev.target.value)}
+            value={username}
+          />
+          <TextField
+            id="standard-password-input"
+            label="Password"
+            type="password"
+            onChange={(ev) => setPassword(ev.target.value)}
+            value={password}
+          />
+          <div>
+            <Button variant="contained" style={{ marginBottom: 20, marginTop: 20 }} onClick={() => { login({ variables: { user: { username, password } } }) }}>
+              Login
+        </Button>
+            <Divider />
+            <Button variant="contained" style={{ marginBottom: 20, marginTop: 20 }}>
+              Google!
+        </Button>
+          </div>
+          {error ?
+            <Snackbar open={error} autoHideDuration={3000} >
+              <Alert severity="error">
+                {error.message}
+              </Alert>
+            </Snackbar>
+            : null}
+        </div>
       }
+
 
     </div>
   );

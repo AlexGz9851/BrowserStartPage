@@ -190,7 +190,10 @@ function Note({ note, onRemoveNote, onChangeNote, updateNote }) {
 
   useResizeObserver(titleTextAreaRef.current, () => {
     if (titleTextAreaRef?.current) {
-      updateNote({ width: titleTextAreaRef.current.style.width })
+      const width = titleTextAreaRef.current.style.width;
+      if (width && width !== "") {
+        updateNote({ width: titleTextAreaRef.current.style.width })
+      }
     }
   })
 

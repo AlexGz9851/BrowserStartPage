@@ -100,19 +100,16 @@ class MyCalendar extends React.Component {
     });
   }
 
-
   render() {
     return (
       <div>
         {
           this.state.isSignedIn ?
             <div>
-              <p>Calendario</p>
               <button id="cerrarSesion" onClick={this.cerrarSesion}>Cerrar sesion</button>
             </div>
             :
             <div>
-              <p>Calendario</p>
               <button id="iniciarSesion" onClick={this.iniciarSesion}>Iniciar sesion</button>
             </div>
         }

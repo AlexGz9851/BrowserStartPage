@@ -1,5 +1,12 @@
 import { useMutation, gql } from '@apollo/client';
 import { useState, useEffect } from 'react';
+import { Card, Button, Divider, TextField } from "@material-ui/core";
+import Snackbar from '@material-ui/core/Snackbar';
+import MuiAlert from '@material-ui/lab/Alert';
+
+function Alert(props) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
 
 const SIGNUP = gql`mutation signUp($user: SignUpInput!){
   signUp(user: $user){
@@ -25,7 +32,11 @@ function SignUp({ setLoggedIn, setSettings }) {
 
   const clickSignUp = () => {
     signUp().catch(err => {
-      alert(err) /*TODO(LALO): Esto como una notificacion de error bonita*/
+          <Snackbar open={true} autoHideDuration={3000} >
+            <Alert severity="error">
+              {err}
+            </Alert>
+          </Snackbar>
     })
   }
 
@@ -39,13 +50,40 @@ function SignUp({ setLoggedIn, setSettings }) {
   }, [data, loading, setLoggedIn, setSettings])
 
   return (
-    <div className="signup">
-      {error ? <>{error.message}</> : <></>} {/*TODO(LALO): Esto como una notificacion de error bonita*/}
-      {loading ? "..." : <div>
-        <input type="text" name="user" value={username} onChange={(ev) => setUsername(ev.target.value)} />
-        <input type="password" name="password" value={password} onChange={(ev) => setPassword(ev.target.value)} />
-        <input type="button" value="signup" onClick={clickSignUp} />
-      </div>
+    <div>
+      {loading ? "..." :
+        <div style={{ maxWidth: 345, textAlign: "center" }}>
+          <TextField
+            id="standard-password-input"
+            label="Username"
+            style={{ marginBottom: 10 }}
+            onChange={(ev) => setUsername(ev.target.value)}
+            value={username}
+          />
+          <TextField
+            id="standard-password-input"
+            label="Password"
+            type="password"
+            onChange={(ev) => setPassword(ev.target.value)}
+            value={password}
+          />
+          <div>
+            <Button variant="contained" style={{ marginBottom: 20, marginTop: 20 }} onClick={clickSignUp}>
+              Sign Up
+            </Button>
+            <Divider />
+            <Button variant="contained" style={{ marginBottom: 20, marginTop: 20 }}>
+              Google!
+            </Button>
+          </div>
+          {error ?
+            <Snackbar open={error} autoHideDuration={3000} >
+              <Alert severity="error">
+                {error.message}
+              </Alert>
+            </Snackbar>
+            : null}
+        </div>
       }
 
     </div>
