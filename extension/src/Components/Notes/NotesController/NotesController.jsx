@@ -4,8 +4,13 @@ import { useQuery, useMutation } from '@apollo/client';
 import "./NotesController.css"
 import { useState, useEffect } from 'react';
 import { NOTES, FRAGMENT_NOTE_FIELDS, ADD_NOTE, UPDATE_NOTE, REMOVE_NOTE } from './NotesController.gql'
+import Snackbar from '@material-ui/core/Snackbar';
+import MuiAlert from '@material-ui/lab/Alert';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
-
+function Alert(props) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
 
 function NotesController() {
   const notesResponse = useQuery(NOTES);
@@ -70,7 +75,13 @@ function NotesController() {
     if (err.networkError?.result?.errors?.length > 0) {
       err = err.networkError.result.errors[0]
     }
-    alert(err.message) /*TODO(LALO): Esto como una notificacion de error bonita*/
+    return (
+      <Snackbar open={true} autoHideDuration={3000} >
+        <Alert severity="error">
+          {err.message}
+        </Alert>
+      </Snackbar>
+    )
   }
 
   const onAddNote = (n) => {
@@ -91,11 +102,35 @@ function NotesController() {
   }
   return (
     <div>
-      {(!notesResponse || notesResponse.loading) && "LOADING"} {/*TODO(LALO): Esto como un spinner bonito*/}
-      {notesResponse.error && "ERROR" + notesResponse.error} {/*TODO(LALO): Esto como una notificacion de error bonita*/}
-      {addNoteResponse.error && "Error while adding"} {/*TODO(LALO): Esto como una notificacion de error bonita*/}
-      {updateNoteResponse.error && "Error while adding"} {/*TODO(LALO): Esto como una notificacion de error bonita*/}
-      {removeNoteResponse.error && "Error while adding"} {/*TODO(LALO): Esto como una notificacion de error bonita*/}
+      {(!notesResponse || notesResponse.loading) && <CircularProgress />}
+      {notesResponse.error &&
+        <Snackbar open={true} autoHideDuration={3000} >
+          <Alert severity="error">
+            ERROR + {notesResponse.error}
+          </Alert>
+        </Snackbar>
+      }
+      {addNoteResponse.error &&
+        <Snackbar open={true} autoHideDuration={3000} >
+          <Alert severity="error">
+            Error while adding
+          </Alert>
+        </Snackbar>
+      }
+      {updateNoteResponse.error &&
+        <Snackbar open={true} autoHideDuration={3000} >
+          <Alert severity="error">
+            Error while adding
+          </Alert>
+        </Snackbar>
+      }
+      {removeNoteResponse.error &&
+        <Snackbar open={true} autoHideDuration={3000} >
+          <Alert severity="error">
+            Error while adding
+          </Alert>
+        </Snackbar>
+      }
       <NoteForm onSubmit={onAddNote} />
       {notes.map((note, i) => <Note note={note}
         onRemoveNote={onRemoveNote}

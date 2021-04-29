@@ -34,7 +34,6 @@ const useStyles = makeStyles((theme) => ({
 function NoteForm(props) {
   const NoteTypes = { "TODO": "TODO", "NOTE": "NOTE" }
   const [input, setInput] = useState('');
-  const [showSettings, setShowSettings] = useState(false);
   const [settings, setSettings] = useState(JSON.parse(localStorage.getItem('settings')) || {});
   const [loggedIn, setLoggedIn] = useState(localStorage.getItem('token') != null);
   const [open, setOpen] = useState(false);
@@ -76,11 +75,9 @@ function NoteForm(props) {
           placeholder="Add new note..."
           onChange={handleChange}
         />
-        {/* Esto es una nota */}
         <IconButton style={{ color: 'white' }} className={classes.iconButton} onClick={handleSubmitNote}>
           <EditOutlinedIcon />
         </IconButton>
-        {/* esto es un todo */}
         <IconButton style={{ color: 'white' }} className={classes.iconButton} onClick={handleSubmitTODO}>
           <AssignmentTurnedInOutlinedIcon />
         </IconButton>

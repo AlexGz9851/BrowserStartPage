@@ -11,6 +11,12 @@ import MuiDialogContent from '@material-ui/core/DialogContent';
 import MuiDialogActions from '@material-ui/core/DialogActions';
 import CloseIcon from '@material-ui/icons/Close';
 import { grey, indigo } from "@material-ui/core/colors";
+import Snackbar from '@material-ui/core/Snackbar';
+import MuiAlert from '@material-ui/lab/Alert';
+
+function Alert(props) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
 
 const UPDATESETTINGS = gql`mutation updateSettings($settings: SettingsInput!){
   updateSettings(settings: $settings) {
@@ -121,7 +127,13 @@ function Settings({ settings, setSettings, setLoggedIn, imgUrl, open, setOpen })
 
   const clickUpdateSettings = () => {
     updateSettings().catch(err => {
-      alert(err) /*TODO(LALO): Esto como una notificacion de error bonita*/
+      return(
+        <Snackbar open={true} autoHideDuration={3000} >
+        <Alert severity="error">
+          {err}
+        </Alert>
+      </Snackbar>
+      )
     })
   }
 
@@ -136,8 +148,6 @@ function Settings({ settings, setSettings, setLoggedIn, imgUrl, open, setOpen })
 
   return (
     <div className="settings">
-      <label htmlFor="searchengine">Google token:</label>
-      <input type="text" name="googleToken" id="googleToken" value={settings.googleToken} onChange={(ev) => setSettings({ ...settings, googleToken: ev.target.value })} />
       <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={open}>
         <DialogTitle onClose={handleClose}>
           <Typography style={{ color: 'black' }} >

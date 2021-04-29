@@ -1,6 +1,12 @@
 import { useMutation, gql } from '@apollo/client';
 import { useState, useEffect } from 'react';
 import { Card, Button, Divider, TextField } from "@material-ui/core";
+import Snackbar from '@material-ui/core/Snackbar';
+import MuiAlert from '@material-ui/lab/Alert';
+
+function Alert(props) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
 
 const SIGNUP = gql`mutation signUp($user: SignUpInput!){
   signUp(user: $user){
@@ -26,7 +32,11 @@ function SignUp({ setLoggedIn, setSettings }) {
 
   const clickSignUp = () => {
     signUp().catch(err => {
-      alert(err) /*TODO(LALO): Esto como una notificacion de error bonita*/
+          <Snackbar open={true} autoHideDuration={3000} >
+            <Alert severity="error">
+              {err}
+            </Alert>
+          </Snackbar>
     })
   }
 
@@ -41,7 +51,6 @@ function SignUp({ setLoggedIn, setSettings }) {
 
   return (
     <div>
-      {error ? <>{error.message}</> : <></>} {/*TODO(LALO): Esto como una notificacion de error bonita*/}
       {loading ? "..." :
         <div style={{ maxWidth: 345, textAlign: "center" }}>
           <TextField
@@ -67,6 +76,13 @@ function SignUp({ setLoggedIn, setSettings }) {
               Google!
             </Button>
           </div>
+          {error ?
+            <Snackbar open={error} autoHideDuration={3000} >
+              <Alert severity="error">
+                {error.message}
+              </Alert>
+            </Snackbar>
+            : null}
         </div>
       }
 

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import "./DateTimeClock.css";
-import { Typography, Grid } from "@material-ui/core";
+import { Typography } from "@material-ui/core";
 
 const weekdays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
 const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
@@ -20,8 +20,8 @@ function DateTimeClock() {
 
   return (
     <div className="DateTime">
-      <Typography variant="h1">{timeString}<small>{meridian}</small></Typography>
-      <Typography variant="h2">{dateString}</Typography>
+      <Typography variant="h1" style={{fontFamily:"Century Gothic"}}>{timeString}<small style={{fontSize:25}}>{meridian}</small></Typography>
+      <Typography variant="h2" style={{fontFamily:"Century Gothic"}}>{dateString}</Typography>
     </div>
   );
 }

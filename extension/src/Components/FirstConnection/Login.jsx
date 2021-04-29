@@ -1,6 +1,12 @@
+import React, { useState, useEffect } from "react";
 import { useLazyQuery, gql } from '@apollo/client';
-import { useState, useEffect } from 'react';
-import { Card, Button, Divider, TextField } from "@material-ui/core";
+import { Button, Divider, TextField } from "@material-ui/core";
+import Snackbar from '@material-ui/core/Snackbar';
+import MuiAlert from '@material-ui/lab/Alert';
+
+function Alert(props) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
 
 const LOGIN = gql`query login($user: LoginInput!){
   login(user: $user) {
@@ -18,7 +24,7 @@ const LOGIN = gql`query login($user: LoginInput!){
 function LogIn({ setLoggedIn, setSettings }) {
   const [username, setUsername] = useState("test");
   const [password, setPassword] = useState("test");
-  const [login, { called, error, loading, data }] = useLazyQuery(LOGIN)
+  const [login, { called, error, loading, data }] = useLazyQuery(LOGIN);
 
   useEffect(() => {
     if (called && !loading && data && !error) {
@@ -31,7 +37,6 @@ function LogIn({ setLoggedIn, setSettings }) {
 
   return (
     <div>
-      {error ? <>{error.message}</> : <></>} {/*TODO(LALO): Esto como una notificacion bonita*/}
       {loading ? "..." :
         <div style={{ maxWidth: 345, textAlign: "center" }}>
           <TextField
@@ -57,6 +62,13 @@ function LogIn({ setLoggedIn, setSettings }) {
               Google!
         </Button>
           </div>
+          {error ?
+            <Snackbar open={error} autoHideDuration={3000} >
+              <Alert severity="error">
+                {error.message}
+              </Alert>
+            </Snackbar>
+            : null}
         </div>
       }
 
