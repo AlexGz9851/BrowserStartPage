@@ -6,7 +6,7 @@ import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
 import AssignmentTurnedInOutlinedIcon from '@material-ui/icons/AssignmentTurnedInOutlined';
 import SettingsOutlinedIcon from '@material-ui/icons/SettingsOutlined';
 import Settings from '../../Settings/Settings';
-import {grey, } from "@material-ui/core/colors";
+import { grey, } from "@material-ui/core/colors";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -81,7 +81,7 @@ function NoteForm(props) {
           <EditOutlinedIcon />
         </IconButton>
         {/* esto es un todo */}
-        <IconButton style={{ color: 'white' }} className={classes.iconButton} onClick={handleSubmitTODO}> 
+        <IconButton style={{ color: 'white' }} className={classes.iconButton} onClick={handleSubmitTODO}>
           <AssignmentTurnedInOutlinedIcon />
         </IconButton>
         <Divider className={classes.divider} orientation="vertical" />

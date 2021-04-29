@@ -174,15 +174,15 @@ function Settings({ settings, setSettings, setLoggedIn, imgUrl, open, setOpen })
               variant="outlined"
               size="small"
             />
-            <Button variant="outlined"onChange={ev => {
-        const formData = new FormData();
-        formData.append("image", ev.target.files[0]);
-        fetch(imgUrl, { method: "POST", body: formData, headers: { "Authorization": "Bearer " + token } })
-          .then(res => res.json())
-          .then(data => {
-            setSettings({ ...settings, backgroundImage: data.id })
-          })
-      }} >
+            <Button variant="outlined" onChange={ev => {
+              const formData = new FormData();
+              formData.append("image", ev.target.files[0]);
+              fetch(imgUrl, { method: "POST", body: formData, headers: { "Authorization": "Bearer " + token } })
+                .then(res => res.json())
+                .then(data => {
+                  setSettings({ ...settings, backgroundImage: data.id })
+                })
+            }} >
               Browse
           </Button>
           </div>
