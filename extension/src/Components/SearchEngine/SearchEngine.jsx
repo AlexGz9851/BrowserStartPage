@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { IconButton, TextField} from '@material-ui/core';
 import SearchIcon from '@material-ui/icons/Search';
-import clsx from 'clsx';
 
 const useStyles = makeStyles((theme) => ({
   root: {

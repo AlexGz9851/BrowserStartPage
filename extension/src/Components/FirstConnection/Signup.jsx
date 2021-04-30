@@ -1,6 +1,6 @@
 import { useMutation, gql } from '@apollo/client';
 import { useState, useEffect } from 'react';
-import { Card, Button, Divider, TextField } from "@material-ui/core";
+import { Button, Divider, TextField } from "@material-ui/core";
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
 
