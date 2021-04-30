@@ -38,12 +38,11 @@ function App() {
             </Grid>
           </Grid>
         </div> :
-        <Grid container direction="column" style={{textAlign:"center"}}>
-          <Grid container justify="center">
+        <div className="App">
+          <Grid container direction="column" style={{ paddingLeft: "40%", paddingTop: "10%" }}>
             <FirstConnection setLoggedIn={setLoggedIn} setSettings={setSettings} />
           </Grid>
-        </Grid>
-
+        </div>
       }
     </ApolloProvider>
   );
