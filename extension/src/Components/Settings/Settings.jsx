@@ -13,6 +13,9 @@ import CloseIcon from '@material-ui/icons/Close';
 import { grey, indigo } from "@material-ui/core/colors";
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import Backdrop from '@material-ui/core/Backdrop';
+import "./Settings.css"
 
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -97,7 +100,18 @@ const DialogActions = withStyles((theme) => ({
   },
 }))(MuiDialogActions);
 
-function Settings({ settings, setSettings, setLoggedIn, imgUrl, open, setOpenSettings, setGoogleLogedIn, googleLogedIn }) {
+function GoogleButton({ text, onClick }) {
+  return (
+    <div className="google-btn" onClick={onClick}>
+      <div className="google-icon-wrapper">
+        <img className="google-icon" src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" />
+      </div>
+      <div className="btn-text"><b>{text}</b></div>
+    </div>
+  )
+}
+
+function Settings({ settings, setSettings, setLoggedIn, imgUrl, openSettings, setOpenSettings, setGoogleLogedIn, googleLogedIn }) {
   const [updateSettings, { called, loading, data }] = useMutation(UPDATESETTINGS, {
     variables: { settings }
   });
@@ -106,6 +120,7 @@ function Settings({ settings, setSettings, setLoggedIn, imgUrl, open, setOpenSet
   const [error, setError] = useState(null);
   const [showError, setShowError] = useState(false);
   const [file, setFile] = useState("Choose a file");
+  const [loadingBackdrop, setLoadingBackdrop] = useState(false);
   const token = localStorage.getItem('token');
 
   const classes = useStyles();
@@ -131,9 +146,12 @@ function Settings({ settings, setSettings, setLoggedIn, imgUrl, open, setOpenSet
   }
 
   const clickUpdateSettings = () => {
+    setLoadingBackdrop(true)
     updateSettings().then(() => {
+      setLoadingBackdrop(false)
       setOpenSettings(false);
     }).catch(err => {
+      setLoadingBackdrop(false)
       setError(err)
     })
   }
@@ -157,12 +175,14 @@ function Settings({ settings, setSettings, setLoggedIn, imgUrl, open, setOpenSet
   const cerrarSesion = () => {
     console.log('Cerrando sesion');
     window.gapi.auth2.getAuthInstance().signOut();
-    setGoogleLogedIn(false)
+    setOpenSettings(false);
+    setGoogleLogedIn(false);
   }
 
   return (
     <div className="settings">
-      <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={open}>
+      <Backdrop open={loadingBackdrop} style={{ zIndex: 5000, color: '#fff' }}><CircularProgress /></Backdrop>
+      <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={openSettings}>
         <DialogTitle onClose={handleClose}>
           <Typography style={{ color: 'black' }} >
             Settings
@@ -220,11 +240,11 @@ function Settings({ settings, setSettings, setLoggedIn, imgUrl, open, setOpenSet
             Connect with Google Calendar:
           </Typography>
           <div style={{ textAlign: "center" }}>
-            {!googleLogedIn ? <Button variant="outlined" onClick={iniciarSesion}>
-              Sync with Google!
-            </Button> : <Button variant="outlined" onClick={cerrarSesion}>
-              Disconnect calendar
-            </Button>}
+            {!googleLogedIn ?
+              <GoogleButton text="Sync calendar!" onClick={iniciarSesion} />
+              :
+              <GoogleButton text="Disconnect :(" onClick={cerrarSesion} />
+            }
 
           </div>
           <Divider style={{ margin: "5px 0" }} />

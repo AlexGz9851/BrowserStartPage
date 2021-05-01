@@ -1,12 +1,16 @@
+.scheduler {
+  padding:5px;
+  border-radius: 5px;
+  background-color: #202123;
+}
+
 div.scheduler-view {
   border: none;
   
 }
 
 table.scheduler {
-  background-color: #444;
-  border-collapse: collapse;
-  border-radius: 1em;
+  background-color: #202123;
   max-width: 1440px;
 }
 
@@ -23,14 +27,20 @@ table.scheduler > tbody > tr > td:first-child {
 }
 
 .ant-popover-inner{
-  background-color: #333;
-  border-style: solid;
-  border-color: #ddd;
+  background-color: #202123;
+  border: solid #ddd 1px;
 }
 .ant-popover-placement-bottomLeft >.ant-popover-content>div.ant-popover-arrow {
   top:3px;
-  border-top-color: #ddd;
-  border-left-color: #ddd;
+  border-top-color: transparent;
+  border-left-color: transparent;
+  border-right-color: transparent;
+  border-bottom-color: transparent;
+}
+
+.ant-popover-placement-top > .ant-popover-content > .ant-popover-arrow, .ant-popover-placement-topLeft > .ant-popover-content > .ant-popover-arrow, .ant-popover-placement-topRight > .ant-popover-content > .ant-popover-arrow {
+  border-top-color: transparent;
+  border-left-color: transparent;
   border-right-color: transparent;
   border-bottom-color: transparent;
 }

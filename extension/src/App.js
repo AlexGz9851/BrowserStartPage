@@ -15,7 +15,7 @@ function App() {
   const [googleLogedIn, setGoogleLogedIn] = useState(false);
   const [events, setEvents] = useState([])
   const [settings, setSettings] = useState(JSON.parse(localStorage.getItem('settings')) || {});
-  const [open, setOpen] = useState(false);
+  const [openSettings, setOpenSettings] = useState(false);
 
   const initClient = () => {
     window.gapi.client.init({
@@ -23,6 +23,12 @@ function App() {
       clientId: '897082507710-h3ok2o6pt568cdpfi1lsfkhv930nhga0.apps.googleusercontent.com',
       discoveryDocs: ["https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest"],
       scope: "https://www.googleapis.com/auth/calendar.readonly"
+    }).then(() => {
+      const signedIn = window.gapi.auth2.getAuthInstance().isSignedIn.get();
+      if (signedIn && !googleLogedIn) {
+        setGoogleLogedIn(true);
+        loadEvents();
+      }
     });
   }
 
@@ -32,42 +38,46 @@ function App() {
 
   useEffect(() => {
     if (googleLogedIn) {
-      const date = new Date()
-      date.setHours(0, 0, 0, 0)
-      window.gapi.client.calendar.events.list({
-        'calendarId': 'primary',
-        'timeMin': date.toISOString(),
-        'showDeleted': false,
-        'singleEvents': true,
-        'maxResults': 10,
-        'orderBy': 'startTime'
-      }).then((response) => {
-
-        var events = response.result.items;
-        let dict = []
-
-        for (let i = 0; i < events.length; i++) {
-          let obj = {};
-          let start_time = events[i]["start"]["dateTime"];
-          let end_time = events[i]["end"]["dateTime"];
-          if (!start_time) {
-            start_time = events[i]["start"]["date"] + "T00:00:00-00:00"
-            end_time = events[i]["start"]["date"] + "T23:59:59-00:00"
-          }
-          obj['title'] = events[i]["summary"];
-          obj['start'] = start_time.substr(0, start_time.length - 6);
-          obj['end'] = end_time.substr(0, end_time.length - 6);
-          obj.id = i;
-          obj.resourceId = 'r0'
-          dict.push(obj)
-        }
-        setEvents(dict)
-      });
+      loadEvents();
     }
     else {
       setEvents([])
     }
   }, [googleLogedIn])
+
+  const loadEvents = () => {
+    const date = new Date()
+    date.setHours(0, 0, 0, 0)
+    window.gapi.client.calendar.events.list({
+      'calendarId': 'primary',
+      'timeMin': date.toISOString(),
+      'showDeleted': false,
+      'singleEvents': true,
+      'maxResults': 10,
+      'orderBy': 'startTime'
+    }).then((response) => {
+
+      var events = response.result.items;
+      let dict = []
+
+      for (let i = 0; i < events.length; i++) {
+        let obj = {};
+        let start_time = events[i]["start"]["dateTime"];
+        let end_time = events[i]["end"]["dateTime"];
+        if (!start_time) {
+          start_time = events[i]["start"]["date"] + "T00:00:00-00:00"
+          end_time = events[i]["start"]["date"] + "T23:59:59-00:00"
+        }
+        obj['title'] = events[i]["summary"];
+        obj['start'] = start_time.substr(0, start_time.length - 6);
+        obj['end'] = end_time.substr(0, end_time.length - 6);
+        obj.id = i;
+        obj.resourceId = 'r0'
+        dict.push(obj)
+      }
+      setEvents(dict)
+    });
+  }
 
   const uri = process.env.NODE_ENV === "production" ? process.env.REACT_APP_PRODUCTION_SERVER : process.env.REACT_APP_DEVELOPMENT_SERVER;
   const imgUrl = `${uri}filemanager/`;
@@ -79,9 +89,9 @@ function App() {
     <ApolloProvider client={GraphQLClient}>
       {loggedIn ?
         <div className="App" style={style}>
-          <Grid direction="column">
+          <Grid >
             <Grid container justify="flex-end">
-              <NotesController setOpenSettings={setOpen} />
+              <NotesController setOpenSettings={setOpenSettings} />
             </Grid>
             <Grid style={{ marginTop: "5em" }}>
               <DateTimeClock />
@@ -93,7 +103,7 @@ function App() {
               <MyCalendar events={events} />
             </Grid>
           </Grid>
-          <Settings settings={settings} setSettings={setSettings} setLoggedIn={setLoggedIn} imgUrl={imgUrl} open={open} setOpenSettings={setOpen} setGoogleLogedIn={setGoogleLogedIn} googleLogedIn={googleLogedIn} />
+          <Settings settings={settings} setSettings={setSettings} setLoggedIn={setLoggedIn} imgUrl={imgUrl} openSettings={openSettings} setOpenSettings={setOpenSettings} setGoogleLogedIn={setGoogleLogedIn} googleLogedIn={googleLogedIn} />
         </div> :
         <div className="App">
           <Grid container direction="column" style={{ paddingLeft: "40%", paddingTop: "10%" }}>

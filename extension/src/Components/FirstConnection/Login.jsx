@@ -3,6 +3,7 @@ import { useLazyQuery, gql } from '@apollo/client';
 import { Button, /*Divider,*/ TextField } from "@material-ui/core";
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -44,7 +45,7 @@ function LogIn({ setLoggedIn, setSettings }) {
 
   return (
     <div>
-      {loading ? "..." :
+      {loading ? <CircularProgress style={{ marginBottom: "10px" }} /> :
         <div style={{ maxWidth: 345, textAlign: "center" }}>
           <div>
             <TextField

@@ -9,7 +9,7 @@ import { grey, } from "@material-ui/core/colors";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    padding: '2px 4px',
+    padding: '0',
     display: 'flex',
     alignItems: 'center',
     width: "98%",

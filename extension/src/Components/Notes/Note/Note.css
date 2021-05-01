@@ -2,41 +2,44 @@
   position: absolute;
   z-index: 9;
   width: 150px;
-  background-color: #333;
+  background-color: #202123;
   border: 1px solid #000;
+  border-radius: 10px;
 }
 
 .nota-todo {
   position: absolute;
   z-index: 9;
   width: 250px;
-  background-color: #333;
+  background-color: #202123;
   border: 1px solid #000;
 }
 
 .nota-header {
   height: "100%";
   padding: 0 0px;
+  border-radius: 10px;
 }
 
 .nota-header-content {
   text-align:center;
   z-index: 10;
-  margin: 0 0px;
+  margin: 0 0 1px 0;
   min-height: 26px;
-  background-color: #444;
+  background-color: #202123;
   color: #ccc;
   font-size: 16px;
   font-style:normal;
   font-weight: bold;
   resize: both;
   width: 95%;
-  border: 0px solid #333;
+  border: 0px solid #202123;
 }
 
 .nota-bar {
   height: 17px;
-  background-color: #444;
+  background-color: #202123;
+  border-radius: 10px;
   color: #ccc;
   width: 100%;
   display: flex;
@@ -57,32 +60,38 @@
 }
 
 .nota-close {
-  height: 15px;
-  background-color: #800;
+  /* height: 15px; */
   color: #fff;
   padding: 0;
   margin: 0;
   border: 0;
   cursor: pointer;
-  border: 1px solid #ccc;
   line-height: 10px;
   font-size: 10px;
   flex: 0 0 15px; 
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.nota-close .icon {
+  padding: 0;
 }
 
 .nota-content {
-  padding: 0 5px;
+  padding: 0 0px;
   resize: none;
   height: 70px;
   min-height: 40px;
-  background-color: #333;
+  background-color: #202123;
   text-align: left;
   font-size: 15px;
   color:#ccc;
   
   font-style:oblique;
   width: 90%;
-  border: 0px solid #333;
+  border: 0px solid #202123;
   border-style:solid;
 }
 
@@ -91,14 +100,14 @@
   resize: both;
   height: 70px;
   min-height: 40px;
-  background-color: #333;
+  background-color: #202123;
   text-align: left;
   font-size: 15px;
   color:#ccc;
   
   font-style:oblique;
   width: 90%;
-  border: 0px solid #333;
+  border: 0px solid #202123;
   border-style:solid;
 }
 

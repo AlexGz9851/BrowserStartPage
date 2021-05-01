@@ -20,9 +20,9 @@ function Note({ note, onRemoveNote, onChangeNote, updateNote }) {
   // is it necesary to check if noteCopy.width is a valid value?
   //let initialWidth = note.type === NoteTypes.TODO ? "250px" : "150px";
   //initialWidth =  ? "250px" : "150px";
-  let textColors = ["#ccc", "#d7b2FF", "#FBD5EC", "#A7DDFA", "#eeffee", "#41402E", "#FFEDC0"];
-  let backgroundColors = ["#333", "#442666", "#7A4364", "#2D5F7A", "#2FA853", "#E6E34C", '#8F4623'];
-  let headerColors = ["#444", "#695580", "#C76DA3", "#4897C2", "#5EA86C", "#ADAC51", "#E68550"];
+  let textColors = ["#ccc"]//, "#d7b2FF", "#FBD5EC", "#A7DDFA", "#eeffee", "#41402E", "#FFEDC0"];
+  let backgroundColors = ["#202123"]//, "#442666", "#7A4364", "#2D5F7A", "#2FA853", "#E6E34C", '#8F4623'];
+  let headerColors = ["#202123"]//, "#695580", "#C76DA3", "#4897C2", "#5EA86C", "#ADAC51", "#E68550"];
 
   let defX = (window.innerWidth - (note.type === NoteTypes.TODO ? 300 : 200));
   defX = defX < 0 ? 0 : defX;

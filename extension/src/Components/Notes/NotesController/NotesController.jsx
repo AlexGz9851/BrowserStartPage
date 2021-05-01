@@ -7,6 +7,7 @@ import { NOTES, FRAGMENT_NOTE_FIELDS, ADD_NOTE, UPDATE_NOTE, REMOVE_NOTE } from 
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import Backdrop from '@material-ui/core/Backdrop';
 
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -111,7 +112,9 @@ function NotesController(props) {
   }
   return (
     <div style={{ width: "45%" }}>
-      {(!notesResponse || notesResponse.loading) && <CircularProgress />}
+      {(!notesResponse || notesResponse.loading) &&
+        <Backdrop open={true} style={{ zIndex: 999, color: '#fff' }}><CircularProgress /></Backdrop>
+      }
       {error && error.graphQLErrors.concat(error.networkError).map(({ message }, i) => (
         <Snackbar key={i} open={errorOpen} autoHideDuration={3000} onClose={() => { setErrorOpen(false) }}
           anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}>
