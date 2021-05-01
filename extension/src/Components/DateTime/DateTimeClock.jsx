@@ -20,8 +20,8 @@ function DateTimeClock() {
 
   return (
     <div className="DateTime">
-      <Typography variant="h1" style={{fontFamily:"Century Gothic"}}>{timeString}<small style={{fontSize:25}}>{meridian}</small></Typography>
-      <Typography variant="h2" style={{fontFamily:"Century Gothic"}}>{dateString}</Typography>
+      <Typography variant="h1" style={{ fontFamily: "Century Gothic" }}>{timeString}<small style={{ fontSize: 25 }}>{meridian}</small></Typography>
+      <Typography variant="h3" style={{ fontFamily: "Century Gothic" }}>{dateString}</Typography>
     </div>
   );
 }

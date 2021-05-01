@@ -5,7 +5,6 @@ import { Paper, InputBase, Divider, IconButton } from '@material-ui/core';
 import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
 import AssignmentTurnedInOutlinedIcon from '@material-ui/icons/AssignmentTurnedInOutlined';
 import SettingsOutlinedIcon from '@material-ui/icons/SettingsOutlined';
-import Settings from '../../Settings/Settings';
 import { grey, } from "@material-ui/core/colors";
 
 const useStyles = makeStyles((theme) => ({
@@ -13,7 +12,7 @@ const useStyles = makeStyles((theme) => ({
     padding: '2px 4px',
     display: 'flex',
     alignItems: 'center',
-    width: 400,
+    width: "98%",
     backgroundColor: grey[900]
   },
   input: {
@@ -34,17 +33,10 @@ const useStyles = makeStyles((theme) => ({
 function NoteForm(props) {
   const NoteTypes = { "TODO": "TODO", "NOTE": "NOTE" }
   const [input, setInput] = useState('');
-  const [settings, setSettings] = useState(JSON.parse(localStorage.getItem('settings')) || {});
-  const [loggedIn, setLoggedIn] = useState(localStorage.getItem('token') != null);
-  const [open, setOpen] = useState(false);
-
   const classes = useStyles();
 
-  const uri = process.env.NODE_ENV === "production" ? process.env.REACT_APP_PRODUCTION_SERVER : process.env.REACT_APP_DEVELOPMENT_SERVER;
-  const imgUrl = `${uri}filemanager/`;
-
   const handleClickOpen = () => {
-    setOpen(true);
+    props.setOpenSettings(true);
   };
 
   const handleChange = e => {
@@ -86,7 +78,6 @@ function NoteForm(props) {
           <SettingsOutlinedIcon />
         </IconButton>
       </Paper>
-      <Settings settings={settings} setSettings={setSettings} setLoggedIn={setLoggedIn} imgUrl={imgUrl} open={open} setOpen={setOpen} />
     </div>
 
   );

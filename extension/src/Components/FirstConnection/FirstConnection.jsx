@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Tabs, Tab, Card, Grid } from "@material-ui/core";
 import LogIn from "./Login";
 import SignUp from "./Signup";
+import './FirstConnection.css'
 
 function FirstConnection({ setLoggedIn, setSettings }) {
   const [value, setValue] = useState(0);
@@ -11,7 +12,7 @@ function FirstConnection({ setLoggedIn, setSettings }) {
   };
 
   return (
-    <Grid container>
+    <Grid container className="firstConnectionForm">
       <Card>
         <Tabs
           value={value}

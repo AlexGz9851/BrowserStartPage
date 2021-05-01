@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import GraphQLClient from '../../utils/GraphQLClient';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import {
-  IconButton, Button, Dialog,
+  IconButton, Button, Dialog, Divider, Input,
   Typography, InputLabel, FormControl, Select, TextField
 } from '@material-ui/core';
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
@@ -97,13 +97,17 @@ const DialogActions = withStyles((theme) => ({
   },
 }))(MuiDialogActions);
 
-function Settings({ settings, setSettings, setLoggedIn, imgUrl, open, setOpen }) {
+function Settings({ settings, setSettings, setLoggedIn, imgUrl, open, setOpenSettings, setGoogleLogedIn, googleLogedIn }) {
   const [updateSettings, { called, loading, data }] = useMutation(UPDATESETTINGS, {
     variables: { settings }
   });
   const [backUp, setBackUp] = useState({ ...settings })
   const [state, setState] = useState(settings.searchEngine);
+  const [error, setError] = useState(null);
+  const [showError, setShowError] = useState(false);
+  const [file, setFile] = useState("Choose a file");
   const token = localStorage.getItem('token');
+
   const classes = useStyles();
 
   useEffect(() => {
@@ -123,28 +127,38 @@ function Settings({ settings, setSettings, setLoggedIn, imgUrl, open, setOpen })
 
   const removeChanges = () => {
     setSettings({ ...backUp })
+    handleClose()
   }
 
   const clickUpdateSettings = () => {
-    updateSettings().catch(err => {
-      return(
-        <Snackbar open={true} autoHideDuration={3000} >
-        <Alert severity="error">
-          {err}
-        </Alert>
-      </Snackbar>
-      )
+    updateSettings().then(() => {
+      setOpenSettings(false);
+    }).catch(err => {
+      setError(err)
     })
   }
 
   const handleClose = () => {
-    setOpen(false);
+    setOpenSettings(false);
   };
 
   const handleChangeSelect = (event) => {
     setState(event.target.value);
     setSettings({ ...settings, searchEngine: event.target.value });
   };
+
+  const iniciarSesion = () => {
+    console.log("Iniciando sesion");
+    window.gapi.auth2.getAuthInstance().signIn().then(() => {
+      setGoogleLogedIn(true)
+    });
+  }
+
+  const cerrarSesion = () => {
+    console.log('Cerrando sesion');
+    window.gapi.auth2.getAuthInstance().signOut();
+    setGoogleLogedIn(false)
+  }
 
   return (
     <div className="settings">
@@ -176,39 +190,56 @@ function Settings({ settings, setSettings, setLoggedIn, imgUrl, open, setOpen })
           <Typography style={{ color: 'black' }}>
             Change Background:
           </Typography>
-          <div style={{ textAlign: 'center' }}>
+          <div style={{ textAlign: 'center', display: 'flex', justifyContent: 'center' }}>
+            <Input accept="image/*" id="contained-button-file" type="file" style={{ display: 'none' }}
+              onChange={ev => {
+                const formData = new FormData();
+                formData.append("image", ev.target.files[0]);
+                setFile(ev.target.files[0].name)
+                fetch(imgUrl, { method: "POST", body: formData, headers: { "Authorization": "Bearer " + token } })
+                  .then(res => res.json())
+                  .then(data => {
+                    setSettings({ ...settings, backgroundImage: data.id })
+                  })
+              }} />
             <TextField
               style={{ minWidth: 300 }}
               id="outlined-size-small"
-              defaultValue="Choose Image"
+              value={file}
               variant="outlined"
               size="small"
+              disabled={true}
             />
-            <Button variant="outlined" onChange={ev => {
-              const formData = new FormData();
-              formData.append("image", ev.target.files[0]);
-              fetch(imgUrl, { method: "POST", body: formData, headers: { "Authorization": "Bearer " + token } })
-                .then(res => res.json())
-                .then(data => {
-                  setSettings({ ...settings, backgroundImage: data.id })
-                })
-            }} >
-              Browse
-          </Button>
+            <Button variant="outlined">
+              <label htmlFor="contained-button-file">Browse</label>
+            </Button>
           </div>
-          <Typography gutterBottom>
-            Connect with Google:
+          <Divider style={{ marginTop: 5 }} />
+
+          <Typography gutterBottom style={{ color: 'black' }}>
+            Connect with Google Calendar:
           </Typography>
           <div style={{ textAlign: "center" }}>
-            <Button variant="outlined">
-              Google!
+            {!googleLogedIn ? <Button variant="outlined" onClick={iniciarSesion}>
+              Sync with Google!
+            </Button> : <Button variant="outlined" onClick={cerrarSesion}>
+              Disconnect calendar
+            </Button>}
+
+          </div>
+          <Divider style={{ margin: "5px 0" }} />
+          <Typography gutterBottom style={{ color: 'black' }}>
+            Your account:
+          </Typography>
+          <div style={{ textAlign: "center" }}>
+
+            <Button onClick={logOut} color="secondary" variant="contained" >
+              Log Out
           </Button>
           </div>
         </DialogContent>
         <DialogActions>
-          <Button onClick={logOut} color="secondary" variant="contained" >
-            Log Out
-          </Button>
+
           <Button onClick={removeChanges} color="default" variant="contained">
             Cancel
           </Button>
@@ -217,6 +248,15 @@ function Settings({ settings, setSettings, setLoggedIn, imgUrl, open, setOpen })
           </Button>
         </DialogActions>
       </Dialog>
+      {error && error.graphQLErrors.concat(error.networkError).map(({ message }, i) => (
+        <Snackbar key={i} open={showError} autoHideDuration={3000} onClose={() => { setShowError(false) }}
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}>
+          <Alert severity="error" onClose={() => { setShowError(false) }}>
+            {message}
+          </Alert>
+        </Snackbar>
+      ))
+      }
     </div>
   );
 }

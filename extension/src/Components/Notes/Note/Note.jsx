@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useEffect, useRef, useCallback } from "react";
 import './Note.css';
 import { AiOutlineClose } from 'react-icons/ai';
 import TextareaAutosize from 'react-textarea-autosize';
@@ -92,9 +92,9 @@ function Note({ note, onRemoveNote, onChangeNote, updateNote }) {
     width: note.width
   };
 
-  const submitChanges = (val, field) => {
+  const submitChanges = useCallback((val, field) => {
     onChangeNote({ _id: note._id, [field]: val });
-  }
+  }, [note._id, onChangeNote])
 
   const handleCloseElement = (e) => {
     onRemoveNote(note._id);
@@ -184,14 +184,14 @@ function Note({ note, onRemoveNote, onChangeNote, updateNote }) {
   useEffect(() => {
     const id = setTimeout(() => {
       submitChanges(note.width, "width")
-    }, 50);
+    }, 200);
     return () => clearTimeout(id);
-  }, [note.width])
+  }, [note.width, submitChanges])
 
   useResizeObserver(titleTextAreaRef.current, () => {
     if (titleTextAreaRef?.current) {
       const width = titleTextAreaRef.current.style.width;
-      if (width && width !== "") {
+      if (width && width !== "" && note.width !== width) {
         updateNote({ width: titleTextAreaRef.current.style.width })
       }
     }

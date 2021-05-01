@@ -1,4 +1,4 @@
-export default {
+const settings = {
   schedulerWidth: '80%',
   besidesWidth: 20,
   schedulerMaxHeight: 0,
@@ -56,3 +56,4 @@ export default {
   views: [
   ],
 }
+export default settings;

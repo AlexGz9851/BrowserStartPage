@@ -2,7 +2,7 @@ import Note from '../Note'
 import NoteForm from "../NoteForm"
 import { useQuery, useMutation } from '@apollo/client';
 import "./NotesController.css"
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { NOTES, FRAGMENT_NOTE_FIELDS, ADD_NOTE, UPDATE_NOTE, REMOVE_NOTE } from './NotesController.gql'
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
@@ -12,9 +12,11 @@ function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
 
-function NotesController() {
+function NotesController(props) {
   const notesResponse = useQuery(NOTES);
   const [notes, setNotes] = useState(JSON.parse(localStorage.getItem('notes')) || [])
+  const [error, setError] = useState(null)
+  const [errorOpen, setErrorOpen] = useState(false);
   const [addNote, addNoteResponse] = useMutation(ADD_NOTE, {
     update(cache, { data: { addNote } }) {
       cache.modify({
@@ -71,26 +73,33 @@ function NotesController() {
     }
   }, [notesResponse])
 
-  const handleError = (err) => {
-    if (err.networkError?.result?.errors?.length > 0) {
-      err = err.networkError.result.errors[0]
+  useEffect(() => {
+    if (notesResponse.error) {
+      setError(notesResponse.error)
     }
-    return (
-      <Snackbar open={true} autoHideDuration={3000} >
-        <Alert severity="error">
-          {err.message}
-        </Alert>
-      </Snackbar>
-    )
-  }
+    if (addNoteResponse.error) {
+      setError(notesResponse.error)
+    }
+    if (updateNoteResponse.error) {
+      setError(notesResponse.error)
+    }
+    if (removeNoteResponse.error) {
+      setError(notesResponse.error)
+    }
+    setErrorOpen(true)
+  }, [notesResponse.error, addNoteResponse.error, updateNoteResponse.error, removeNoteResponse.error])
+
+  const handleError = useCallback((err) => {
+    setError(err);
+  }, [setError])
 
   const onAddNote = (n) => {
     addNote({ variables: { note: n } }).catch(handleError)
   };
 
-  const onChangeNote = (currentNote) => {
+  const onChangeNote = useCallback((currentNote) => {
     updateNote({ variables: { note: currentNote } }).catch(handleError)
-  };
+  }, [updateNote, handleError]);
 
   const onRemoveNote = (_id) => {
     removeNote({ variables: { noteId: _id } }).catch(handleError)
@@ -101,37 +110,18 @@ function NotesController() {
     setNotes([...notes.slice(0, index), noteCopy, ...notes.slice(index + 1)])
   }
   return (
-    <div>
+    <div style={{ width: "45%" }}>
       {(!notesResponse || notesResponse.loading) && <CircularProgress />}
-      {notesResponse.error &&
-        <Snackbar open={true} autoHideDuration={3000} >
-          <Alert severity="error">
-            ERROR + {notesResponse.error}
+      {error && error.graphQLErrors.concat(error.networkError).map(({ message }, i) => (
+        <Snackbar key={i} open={errorOpen} autoHideDuration={3000} onClose={() => { setErrorOpen(false) }}
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}>
+          <Alert severity="error" onClose={() => { setErrorOpen(false) }}>
+            {message}
           </Alert>
         </Snackbar>
+      ))
       }
-      {addNoteResponse.error &&
-        <Snackbar open={true} autoHideDuration={3000} >
-          <Alert severity="error">
-            Error while adding
-          </Alert>
-        </Snackbar>
-      }
-      {updateNoteResponse.error &&
-        <Snackbar open={true} autoHideDuration={3000} >
-          <Alert severity="error">
-            Error while adding
-          </Alert>
-        </Snackbar>
-      }
-      {removeNoteResponse.error &&
-        <Snackbar open={true} autoHideDuration={3000} >
-          <Alert severity="error">
-            Error while adding
-          </Alert>
-        </Snackbar>
-      }
-      <NoteForm onSubmit={onAddNote} />
+      <NoteForm onSubmit={onAddNote} setOpenSettings={props.setOpenSettings} />
       {notes.map((note, i) => <Note note={note}
         onRemoveNote={onRemoveNote}
         onChangeNote={onChangeNote}

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { IconButton, TextField} from '@material-ui/core';
+import { IconButton, TextField } from '@material-ui/core';
 import SearchIcon from '@material-ui/icons/Search';
 
 const useStyles = makeStyles((theme) => ({
@@ -21,17 +21,18 @@ const useStyles = makeStyles((theme) => ({
     padding: 10,
   },
   labelColor: {
-    color:'#fff !important',
+    color: '#fff !important',
   },
   textfield: {
     "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
-      borderColor: "white"
+      borderBottom: "solid white",
+      borderWidth: "0 0 2px 0"
     },
     "&:hover .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
-      borderColor: "white"
+      borderBottom: "2px solid white",
     },
     "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
-      borderColor: "white"
+      borderBottom: "2px solid white",
     },
     "& .MuiOutlinedInput-input": {
       color: "white"
@@ -53,6 +54,10 @@ const useStyles = makeStyles((theme) => ({
     },
     width: '50%',
     fontSize: 25
+  },
+  searchEngine: {
+    display: "flex",
+    justifyContent: "center"
   }
 }));
 
@@ -80,17 +85,22 @@ function SeachEngine({ searchEngine }) {
   }
 
   return (
-    <div className="searchEngine">
-      <TextField 
-        label="Search here!" 
-        value={query} 
-        className={classes.textfield}  
+    <div className={classes.searchEngine}>
+      <TextField
+        label="Search here!"
+        value={query}
+        className={classes.textfield}
         onChange={ev => setQuery(ev.target.value)}
         variant="outlined"
-        />
-      <IconButton style={{color:'white'}} className={classes.iconButton} onClick={search}>
+        onKeyDown={ev => {
+          if (ev.key === 'Enter') {
+            search()
+          }
+        }}
+      />
+      <IconButton style={{ color: 'white' }} className={classes.iconButton} onClick={search}>
         <SearchIcon />
-      </IconButton>   
+      </IconButton>
     </div>
   );
 }
