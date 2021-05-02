@@ -14,12 +14,10 @@ class GraphQLController {
       schema: graphqlSchema,
       graphiql: true,
       customFormatErrorFn: (err) => {
-        if (!(err instanceof GeneralError)) {
-          err = new ServerError(err.message)
+        if (err.originalError instanceof GeneralError) {
+          return err
         }
-        return {
-          message: (err as GeneralError).message
-        };
+        return new ServerError(err.message);
       }
     })(req, res);
   }

@@ -49,7 +49,6 @@ export async function updateSettings(req: any, input: ISettings) {
     try {
       await UserModel.updateOne({ _id: userId }, { '$set': { 'settings': input } })
     } catch (err) {
-      Logger.Err(err)
       throw new ServerError(err.message);
     }
     return await getUserSettings(req.user.id);

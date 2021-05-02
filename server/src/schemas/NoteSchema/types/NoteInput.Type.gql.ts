@@ -25,6 +25,12 @@ const NoteInputType = new GraphQLInputObjectType({
     todo: {
       type: GraphQLList(TodoInputType),
     },
+    posX: {
+      type: GraphQLString
+    },
+    posY: {
+      type: GraphQLString
+    },
     createdAt: {
       type: DateType
     },

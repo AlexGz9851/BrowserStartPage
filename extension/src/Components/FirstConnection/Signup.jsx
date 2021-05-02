@@ -1,13 +1,8 @@
 import { useMutation, gql } from '@apollo/client';
 import { useState, useEffect } from 'react';
 import { Button, /*Divider,*/ TextField } from "@material-ui/core";
-import Snackbar from '@material-ui/core/Snackbar';
-import MuiAlert from '@material-ui/lab/Alert';
 import CircularProgress from '@material-ui/core/CircularProgress';
-
-function Alert(props) {
-  return <MuiAlert elevation={6} variant="filled" {...props} />;
-}
+import ErrorNotification from '../ErrorNotification/ErrorNotification';
 
 const SIGNUP = gql`mutation signUp($user: SignUpInput!){
   signUp(user: $user){
@@ -86,15 +81,7 @@ function SignUp({ setLoggedIn, setSettings }) {
               Google!
             </Button> */}
           </div>
-          {error && error.graphQLErrors.concat(error.networkError).map(({ message }, i) => (
-            <Snackbar key={i} open={showError} autoHideDuration={3000} onClose={() => { setShowError(false) }}
-              anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}>
-              <Alert severity="error" onClose={() => { setShowError(false) }}>
-                {message}
-              </Alert>
-            </Snackbar>
-          ))
-          }
+          <ErrorNotification graphQLError={error} showError={showError} setShowError={setShowError} />
         </div>
       }
 

@@ -118,8 +118,7 @@ export async function removeNote(req: any, id: Types.ObjectId) {
         { '$pull': { 'notes': { _id: note!._id } } }
       )
     } catch (err) {
-      Logger.Err(err)
-      return new ServerError(`Recieved note-id ${id} from user ${userId} but couldn't REMOVE note`)
+      throw new ServerError(`Recieved note-id ${id} from user ${userId} but couldn't REMOVE note`)
     }
     return note
   }

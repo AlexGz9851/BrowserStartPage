@@ -1,13 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useLazyQuery, gql } from '@apollo/client';
 import { Button, /*Divider,*/ TextField } from "@material-ui/core";
-import Snackbar from '@material-ui/core/Snackbar';
-import MuiAlert from '@material-ui/lab/Alert';
 import CircularProgress from '@material-ui/core/CircularProgress';
-
-function Alert(props) {
-  return <MuiAlert elevation={6} variant="filled" {...props} />;
-}
+import ErrorNotification from "../ErrorNotification/ErrorNotification";
 
 const LOGIN = gql`query login($user: LoginInput!){
   login(user: $user) {
@@ -74,15 +69,7 @@ function LogIn({ setLoggedIn, setSettings }) {
               Google!
         </Button> */}
           </div>
-          {error && error.graphQLErrors.concat(error.networkError).map(({ message }, i) => (
-            <Snackbar key={i} open={showError} autoHideDuration={3000} onClose={() => { setShowError(false) }}
-              anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}>
-              <Alert severity="error" onClose={() => { setShowError(false) }}>
-                {message}
-              </Alert>
-            </Snackbar>
-          ))
-          }
+          <ErrorNotification graphQLError={error} showError={showError} setShowError={setShowError} />
         </div>
       }
 

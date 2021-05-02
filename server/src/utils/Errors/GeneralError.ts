@@ -1,12 +1,12 @@
 import { Logger } from '@overnightjs/logger';
-import { GraphQLError } from 'graphql';
 
-class GeneralError extends GraphQLError {
+class GeneralError extends Error {
   timestamp = new Date().getTime();
   code: string;
   serverMessage?: string;
+  message: string;
   constructor(clientMessage: string, serverMessage: string, code: string, showCode: boolean = true) {
-    super("")
+    super()
     this.code = code ? code + this.timestamp : this.timestamp + "";
     this.serverMessage = `${this.code} -- ${serverMessage} `;
     this.message = showCode ? `${this.code} -- ${clientMessage} ` : clientMessage;

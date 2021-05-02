@@ -4,14 +4,9 @@ import { useQuery, useMutation } from '@apollo/client';
 import "./NotesController.css"
 import { useState, useEffect, useCallback } from 'react';
 import { NOTES, FRAGMENT_NOTE_FIELDS, ADD_NOTE, UPDATE_NOTE, REMOVE_NOTE } from './NotesController.gql'
-import Snackbar from '@material-ui/core/Snackbar';
-import MuiAlert from '@material-ui/lab/Alert';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Backdrop from '@material-ui/core/Backdrop';
-
-function Alert(props) {
-  return <MuiAlert elevation={6} variant="filled" {...props} />;
-}
+import ErrorNotification from '../../ErrorNotification/ErrorNotification';
 
 function NotesController(props) {
   const notesResponse = useQuery(NOTES);
@@ -116,32 +111,11 @@ function NotesController(props) {
     setNotes([...notes.slice(0, index), noteCopy, ...notes.slice(index + 1)])
   }
 
-  const errorNotification = () => {
-    if (!error) { return <></> }
-    let errors = [];
-    if (error.graphQLErrors) {
-      errors = errors.concat(error.graphQLErrors)
-    }
-    if (error.networkError?.result?.errors) {
-      errors = errors.concat(error.networkError.result.errors)
-    }
-    else if (error.networkError) {
-      errors = errors.concat(error.networkError)
-    }
-    const toasts = errors.map(({ message }, i) => (
-      <Snackbar key={i} open={errorOpen} autoHideDuration={6000} onClose={() => { setErrorOpen(false) }}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}>
-        <Alert severity="error" onClose={() => { setErrorOpen(false) }}>
-          {message}
-        </Alert>
-      </Snackbar>
-    ))
-    return <>{toasts}</>
-  }
+
   return (
     <div style={{ width: "45%" }}>
       <Backdrop open={notesResponse?.loading} style={{ zIndex: 999, color: '#fff' }}><CircularProgress /></Backdrop>
-      {errorNotification()}
+      <ErrorNotification graphQLError={error} showError={errorOpen} setShowError={setErrorOpen} />
       <NoteForm onSubmit={onAddNote} setOpenSettings={props.setOpenSettings} />
       {notes.map((note, i) => <Note note={note}
         onRemoveNote={onRemoveNote}

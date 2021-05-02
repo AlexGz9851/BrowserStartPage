@@ -64,6 +64,8 @@ export default UserModel;
 ////// Functions ////////
 
 export async function login(username: string, password: string) {
+  username = username.trim();
+  password = password.trim();
   const candidateUser = await UserModel.findOne({ username });
   if (!candidateUser) {
     throw new ClientError('User not found, please verify the username or password');
@@ -83,11 +85,17 @@ export async function login(username: string, password: string) {
 
 export async function signUp(input: IUser) {
   let err = "";
-  if (input.username.trim().length === 0) {
-    err += "User must have at least one character"
+  input.username = input.username.trim();
+  input.password = input.password.trim();
+  if (input.username.length === 0) {
+    err += "-- User must have at least one character"
   }
-  if (input.password.trim().length < 6) {
-    err += "Password must have at least 6 characters"
+  if (input.password.length < 6) {
+    err += "-- Password must have at least 6 characters"
+  }
+  const candidateUser = await UserModel.findOne({ username: input.username });
+  if (candidateUser) {
+    err += "-- User already exists"
   }
   if (err.length !== 0) {
     throw new ClientError(err);

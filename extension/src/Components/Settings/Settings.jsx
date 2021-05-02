@@ -136,6 +136,9 @@ function Settings({ settings, setSettings, setLoggedIn, imgUrl, openSettings, se
   const logOut = () => {
     setLoggedIn(false);
     setSettings({});
+    setOpenSettings(false);
+    window.gapi.auth2.getAuthInstance().signOut();
+    setGoogleLogedIn(false);
     localStorage.clear();
     GraphQLClient.clearStore();
   }
