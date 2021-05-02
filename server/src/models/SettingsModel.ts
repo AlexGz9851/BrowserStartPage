@@ -25,21 +25,22 @@ const SettingsModel = model<ISettings>('Settings', SettingsSchema);
 export default SettingsModel;
 
 import UserModel from './UserModel';
+import ServerError from '../utils/Errors/ServerError';
+import ClientError from '../utils/Errors/ClientError';
 
 async function getUserSettings(userId: number) {
   const user = await UserModel.findById(userId);
   if (user) {
     return user.settings
   }
-  Logger.Err("Recieved request from user " + userId + ", but wasnt found in DB");
-  throw new Error('There was an error, please try again later.');
+  throw new ServerError("Recieved request from user " + userId + ", but wasnt found in DB");
 }
 
 export async function getSettings(req: any) {
   if (req.user) {
     return await getUserSettings(req.user.id);
   }
-  throw new Error('Please login first');
+  throw new ClientError('Please login first');
 }
 
 export async function updateSettings(req: any, input: ISettings) {
@@ -49,9 +50,9 @@ export async function updateSettings(req: any, input: ISettings) {
       await UserModel.updateOne({ _id: userId }, { '$set': { 'settings': input } })
     } catch (err) {
       Logger.Err(err)
-      throw new Error('There was an error, please try again later.');
+      throw new ServerError(err.message);
     }
     return await getUserSettings(req.user.id);
   }
-  throw new Error('Please login first');
+  throw new ClientError('Please login first');
 }

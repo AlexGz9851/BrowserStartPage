@@ -1,7 +1,7 @@
-import { Logger } from '@overnightjs/logger';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { model, Schema } from 'mongoose';
+import ClientError from '../utils/Errors/ClientError';
 import { INote, NoteSchema } from './NoteModel';
 import SettingsModel, { ISettings, SettingsSchema } from './SettingsModel';
 import { BaseTimeDocument, BaseTimeSchema } from './utils/ModelUtils';
@@ -66,7 +66,7 @@ export default UserModel;
 export async function login(username: string, password: string) {
   const candidateUser = await UserModel.findOne({ username });
   if (!candidateUser) {
-    throw new Error('User not found, please verify the username or password')
+    throw new ClientError('User not found, please verify the username or password');
   }
   const match = await candidateUser.comparePassword(password)
   if (match) {
@@ -77,7 +77,7 @@ export async function login(username: string, password: string) {
       jwt: token
     }
   } else {
-    throw new Error('User not found, please verify the username or password')
+    throw new ClientError('User not found, please verify the username or password');
   }
 }
 
@@ -90,7 +90,7 @@ export async function signUp(input: IUser) {
     err += "Password must have at least 6 characters"
   }
   if (err.length !== 0) {
-    throw new Error(err);
+    throw new ClientError(err);
   }
   const newSettings = await SettingsModel.create({});
   input.settings = newSettings;

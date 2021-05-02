@@ -1,5 +1,7 @@
 import { Logger } from '@overnightjs/logger';
 import { model, Schema, Types } from 'mongoose';
+import ClientError from '../utils/Errors/ClientError';
+import ServerError from '../utils/Errors/ServerError';
 import UserModel from './UserModel';
 import { BaseTimeDocument, BaseTimeSchema } from './utils/ModelUtils';
 
@@ -47,8 +49,7 @@ async function getUserNotes(userId: number) {
   if (user) {
     return user.notes
   }
-  Logger.Err("Recieved request from user " + userId + ", but wasnt found in DB");
-  throw new Error('There was an error, please try again later.');
+  throw new ServerError("Recieved request from user " + userId + ", but wasnt found in DB");
 }
 
 
@@ -61,9 +62,9 @@ export async function getNotes(req: any) {
 
 export async function getNote(req: any, id: Types.ObjectId) {
   if (req.user) {
-    return (await getUserNotes(req.user.id)).find(note => note._id?.equals(id));
+    return (await getUserNotes(req.user.id)).find((note: INote) => note._id?.equals(id));
   }
-  throw new Error('Please login first');
+  throw new ClientError('Please login first');
 }
 
 export async function addNote(req: any, input: INote) {
@@ -73,12 +74,11 @@ export async function addNote(req: any, input: INote) {
     try {
       await UserModel.updateOne({ _id: userId }, { '$push': { 'notes': note } })
     } catch (err) {
-      Logger.Err(err)
-      throw new Error("There was a problem creating the note, please try again")
+      throw new ServerError(`Recieved input ${input} from user ${userId} but couldn't ADD note`)
     }
     return note;
   }
-  throw new Error('Please login first');
+  throw new ClientError('Please login first');
 }
 
 export async function updateNote(req: any, input: INote) {
@@ -101,11 +101,11 @@ export async function updateNote(req: any, input: INote) {
       }
     }
     if (failed) {
-      throw new Error("There was a problem updating the note, please try again")
+      throw new ServerError(`Recieved input ${input} from user ${userId} but couldn't UPDATE note`)
     }
     return await getNote(req, noteId!);
   }
-  throw new Error('Please login first');
+  throw new ClientError('Please login first');
 }
 
 export async function removeNote(req: any, id: Types.ObjectId) {
@@ -119,9 +119,9 @@ export async function removeNote(req: any, id: Types.ObjectId) {
       )
     } catch (err) {
       Logger.Err(err)
-      throw new Error("There was a problem removing the note, please try again")
+      return new ServerError(`Recieved note-id ${id} from user ${userId} but couldn't REMOVE note`)
     }
     return note
   }
-  throw new Error('Please login first');
+  throw new ClientError('Please login first');
 }

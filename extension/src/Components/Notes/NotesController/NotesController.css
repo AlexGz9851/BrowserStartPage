@@ -9,3 +9,7 @@
     font-style:italic;
     
 }
+
+.MuiSnackbar-anchorOriginBottomRight {
+  max-width: 350px;
+}

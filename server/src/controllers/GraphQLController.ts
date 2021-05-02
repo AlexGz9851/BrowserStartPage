@@ -1,23 +1,24 @@
 import { Controller, Get, Post } from '@overnightjs/core';
-import { Logger } from '@overnightjs/logger';
 import { Request, Response } from 'express';
 import { graphqlHTTP } from 'express-graphql';
+import GeneralError from '../utils/Errors/GeneralError';
 import graphqlSchema from '../schemas';
+import ServerError from '../utils/Errors/ServerError';
 
 @Controller('graphql')
 class GraphQLController {
   @Get()
   @Post()
   private async get(req: Request, res: Response) {
-    const startTime = Date.now();
     graphqlHTTP({
       schema: graphqlSchema,
       graphiql: true,
       customFormatErrorFn: (err) => {
-        const code = new Date().getTime();
-        Logger.Err(`${code} -- ${err}`)
+        if (!(err instanceof GeneralError)) {
+          err = new ServerError(err.message)
+        }
         return {
-          message: `There was an error on our side! If you continue seeing this message please report the bug with code: ${code}`
+          message: (err as GeneralError).message
         };
       }
     })(req, res);

@@ -79,16 +79,21 @@ function NotesController(props) {
       setError(notesResponse.error)
     }
     if (addNoteResponse.error) {
-      setError(notesResponse.error)
+      setError(addNoteResponse.error)
     }
     if (updateNoteResponse.error) {
-      setError(notesResponse.error)
+      setError(updateNoteResponse.error)
     }
     if (removeNoteResponse.error) {
-      setError(notesResponse.error)
+      setError(removeNoteResponse.error)
     }
-    setErrorOpen(true)
   }, [notesResponse.error, addNoteResponse.error, updateNoteResponse.error, removeNoteResponse.error])
+
+  useEffect(() => {
+    if (error) {
+      setErrorOpen(true)
+    }
+  }, [error])
 
   const handleError = useCallback((err) => {
     setError(err);
@@ -110,20 +115,33 @@ function NotesController(props) {
     let noteCopy = { ...note, ...data }
     setNotes([...notes.slice(0, index), noteCopy, ...notes.slice(index + 1)])
   }
+
+  const errorNotification = () => {
+    if (!error) { return <></> }
+    let errors = [];
+    if (error.graphQLErrors) {
+      errors = errors.concat(error.graphQLErrors)
+    }
+    if (error.networkError?.result?.errors) {
+      errors = errors.concat(error.networkError.result.errors)
+    }
+    else if (error.networkError) {
+      errors = errors.concat(error.networkError)
+    }
+    const toasts = errors.map(({ message }, i) => (
+      <Snackbar key={i} open={errorOpen} autoHideDuration={6000} onClose={() => { setErrorOpen(false) }}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}>
+        <Alert severity="error" onClose={() => { setErrorOpen(false) }}>
+          {message}
+        </Alert>
+      </Snackbar>
+    ))
+    return <>{toasts}</>
+  }
   return (
     <div style={{ width: "45%" }}>
-      {(!notesResponse || notesResponse.loading) &&
-        <Backdrop open={true} style={{ zIndex: 999, color: '#fff' }}><CircularProgress /></Backdrop>
-      }
-      {error && error.graphQLErrors.concat(error.networkError).map(({ message }, i) => (
-        <Snackbar key={i} open={errorOpen} autoHideDuration={3000} onClose={() => { setErrorOpen(false) }}
-          anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}>
-          <Alert severity="error" onClose={() => { setErrorOpen(false) }}>
-            {message}
-          </Alert>
-        </Snackbar>
-      ))
-      }
+      <Backdrop open={notesResponse?.loading} style={{ zIndex: 999, color: '#fff' }}><CircularProgress /></Backdrop>
+      {errorNotification()}
       <NoteForm onSubmit={onAddNote} setOpenSettings={props.setOpenSettings} />
       {notes.map((note, i) => <Note note={note}
         onRemoveNote={onRemoveNote}
