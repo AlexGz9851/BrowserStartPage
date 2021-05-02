@@ -44,11 +44,11 @@ function NoteForm(props) {
   };
 
   const handleSubmitTODO = () => {
-    props.onSubmit({
-      title: input,
-      type: (NoteTypes.TODO),
-    });
-    setInput('');
+    // props.onSubmit({
+    //   title: input,
+    //   type: (NoteTypes.TODO),
+    // });
+    // setInput('');
   };
 
   const handleSubmitNote = () => {
