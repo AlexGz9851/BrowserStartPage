@@ -49,9 +49,8 @@ async function getUserNotes(userId: number) {
   if (user) {
     return user.notes
   }
-  throw new ServerError("Recieved request from user " + userId + ", but wasnt found in DB");
+  throw new ServerError('Recieved request from user ' + userId + ', but wasnt found in DB');
 }
-
 
 export async function getNotes(req: any) {
   if (req.user) {
@@ -84,16 +83,16 @@ export async function addNote(req: any, input: INote) {
 export async function updateNote(req: any, input: INote) {
   if (req.user) {
     const userId = req.user.id;
-    let noteId = input._id instanceof Types.ObjectId ? input._id :
+    const noteId = input._id instanceof Types.ObjectId ? input._id :
       Types.ObjectId(input._id as any);
     let failed = false;
     for (const [key, value] of Object.entries(input)) {
-      if (key === "_id") { continue }
-      const setKey = "notes.$." + key
+      if (key === '_id') { continue }
+      const setKey = 'notes.$.' + key
       try {
         await UserModel.updateOne(
-          { _id: userId, "notes._id": noteId },
-          { "$set": { [setKey]: value } }
+          { _id: userId, 'notes._id': noteId },
+          { '$set': { [setKey]: value } }
         )
       } catch (err) {
         Logger.Err(err)

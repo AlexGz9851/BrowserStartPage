@@ -5,9 +5,10 @@ class GeneralError extends Error {
   code: string;
   serverMessage?: string;
   message: string;
-  constructor(clientMessage: string, serverMessage: string, code: string, showCode: boolean = true) {
+  constructor(clientMessage: string, serverMessage: string, code: string,
+    showCode: boolean = true) {
     super()
-    this.code = code ? code + this.timestamp : this.timestamp + "";
+    this.code = code ? code + this.timestamp : this.timestamp + '';
     this.serverMessage = `${this.code} -- ${serverMessage} `;
     this.message = showCode ? `${this.code} -- ${clientMessage} ` : clientMessage;
     if (showCode) {

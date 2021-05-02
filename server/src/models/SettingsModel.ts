@@ -24,16 +24,16 @@ export const SettingsSchema = new Schema({
 const SettingsModel = model<ISettings>('Settings', SettingsSchema);
 export default SettingsModel;
 
-import UserModel from './UserModel';
-import ServerError from '../utils/Errors/ServerError';
 import ClientError from '../utils/Errors/ClientError';
+import ServerError from '../utils/Errors/ServerError';
+import UserModel from './UserModel';
 
 async function getUserSettings(userId: number) {
   const user = await UserModel.findById(userId);
   if (user) {
     return user.settings
   }
-  throw new ServerError("Recieved request from user " + userId + ", but wasnt found in DB");
+  throw new ServerError('Recieved request from user ' + userId + ', but wasnt found in DB');
 }
 
 export async function getSettings(req: any) {

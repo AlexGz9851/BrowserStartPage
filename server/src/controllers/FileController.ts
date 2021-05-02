@@ -1,17 +1,17 @@
-import { promisify } from 'util';
-import fs from 'fs';
 import { Controller, Get, Middleware, Post } from '@overnightjs/core';
-import { Request, Response } from 'express';
-import multer from 'multer';
-import AWS from 'aws-sdk'
-import { v4 as uuidv4 } from 'uuid';
 import { Logger } from '@overnightjs/logger';
-import { updateSettings, getSettings } from '../models/SettingsModel';
+import AWS from 'aws-sdk'
+import { Request, Response } from 'express';
+import fs from 'fs';
+import multer from 'multer';
+import { promisify } from 'util';
+import { v4 as uuidv4 } from 'uuid';
+import { getSettings, updateSettings } from '../models/SettingsModel';
 
 const upload = multer({
   storage: multer.diskStorage({
     destination: 'uploads/',
-    filename: function (req, file, cb) {
+    filename (req, file, cb) {
       cb(null, file.originalname);
     }
   })
@@ -23,7 +23,7 @@ class FileController {
 
   bucketName = process.env.AWS_BUCKET_NAME!;
 
-  @Get(":id")
+  @Get(':id')
   private async get(req: Request, res: Response) {
     const getParams = {
       Bucket: this.bucketName,
@@ -35,18 +35,18 @@ class FileController {
         res.send(data.Body);
       })
       .catch(err => {
-        res.status(400).send({ success: false, err: err });
+        res.status(400).send({ success: false, err });
       })
   }
 
   @Post()
-  @Middleware(upload.single("image"))
+  @Middleware(upload.single('image'))
   private async post(req: Request, res: Response) {
     if (!req.user) {
       res.status(401).send();
     }
     const source = req.file.path;
-    const targetName = uuidv4() + "." + req.file.path.split(".").pop();
+    const targetName = uuidv4() + '.' + req.file.path.split('.').pop();
     const readFilePromise = promisify(fs.readFile)
     const unlinkFilePromise = promisify(fs.unlink)
 
@@ -60,7 +60,7 @@ class FileController {
         return s3.putObject(putParams).promise()
       })
       .then(async (data) => {
-        let currentSettings = await getSettings(req);
+        const currentSettings = await getSettings(req);
         currentSettings.backgroundImage = targetName;
         return updateSettings(req, currentSettings);
       })
@@ -73,7 +73,6 @@ class FileController {
         res.status(500).send({ success: false });
       })
   }
-
 
 }
 

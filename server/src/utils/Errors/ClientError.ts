@@ -1,9 +1,9 @@
 import GeneralError from './GeneralError';
 
 class ClientError extends GeneralError {
-  static code = "CE"
+  static code = 'CE'
   constructor(message: string) {
-    super(message, "Client Error", ClientError.code, false)
+    super(message, 'Client Error', ClientError.code, false)
   }
 }
 

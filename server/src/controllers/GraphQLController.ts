@@ -1,8 +1,8 @@
 import { Controller, Get, Post } from '@overnightjs/core';
 import { Request, Response } from 'express';
 import { graphqlHTTP } from 'express-graphql';
-import GeneralError from '../utils/Errors/GeneralError';
 import graphqlSchema from '../schemas';
+import GeneralError from '../utils/Errors/GeneralError';
 import ServerError from '../utils/Errors/ServerError';
 
 @Controller('graphql')

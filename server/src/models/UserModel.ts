@@ -84,18 +84,18 @@ export async function login(username: string, password: string) {
 }
 
 export async function signUp(input: IUser) {
-  let err = "";
+  let err = '';
   input.username = input.username.trim();
   input.password = input.password.trim();
   if (input.username.length === 0) {
-    err += "-- User must have at least one character"
+    err += '-- User must have at least one character'
   }
   if (input.password.length < 6) {
-    err += "-- Password must have at least 6 characters"
+    err += '-- Password must have at least 6 characters'
   }
   const candidateUser = await UserModel.findOne({ username: input.username });
   if (candidateUser) {
-    err += "-- User already exists"
+    err += '-- User already exists'
   }
   if (err.length !== 0) {
     throw new ClientError(err);

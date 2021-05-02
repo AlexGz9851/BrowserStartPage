@@ -1,13 +1,13 @@
 import { Server } from '@overnightjs/core';
 import { Logger } from '@overnightjs/logger';
+import AWS from 'aws-sdk';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import jwt from 'express-jwt';
 import http from 'http';
 import mongoose from 'mongoose';
-import GraphQLController from './controllers/GraphQLController';
-import AWS from 'aws-sdk';
 import FileController from './controllers/FileController';
+import GraphQLController from './controllers/GraphQLController';
 
 class MainServer extends Server {
 
@@ -88,7 +88,7 @@ class MainServer extends Server {
         return this.configureAWS();
       })
       .then(() => {
-        Logger.Info("AWS configured correctly", true);
+        Logger.Info('AWS configured correctly', true);
         return this.startServer();
       })
       .then(() => {
