@@ -114,3 +114,9 @@
 textarea::placeholder {
   color: #fff;  
 }
+
+
+button{
+  background: #202123;
+  color: #fff;
+}

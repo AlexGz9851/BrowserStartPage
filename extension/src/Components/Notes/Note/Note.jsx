@@ -24,8 +24,7 @@ function Note({ note, onRemoveNote, onChangeNote, updateNote }) {
   let headerColors = ["#18191B"]//, "#695580", "#C76DA3", "#4897C2", "#5EA86C", "#ADAC51", "#E68550"];
 
   let defX = (window.innerWidth - (note.type === NoteTypes.TODO ? 300 : 200));
-  defX = defX < margin ? margin : defX;
-  defX = "" + defX + "px";
+  defX = "" +  (defX < margin ? margin : defX ) + "px";
   let newPosX = (typeof note.posX === 'undefined') ? defX : note.posX;
   let newPosY = (typeof note.posY === 'undefined') ? "100px" : note.posY;
 
