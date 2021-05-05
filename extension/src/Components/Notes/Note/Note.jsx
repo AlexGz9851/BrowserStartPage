@@ -17,7 +17,7 @@ function Note({ note, onRemoveNote, onChangeNote, updateNote }) {
     width: window.innerWidth
   }
 
-  const margin = 5; // margin in px for notes in window.
+  const margin = 15; // margin in px for notes in window.
 
   let textColors = ["#ccc"]//, "#d7b2FF", "#FBD5EC", "#A7DDFA", "#eeffee", "#41402E", "#FFEDC0"];
   let backgroundColors = ["#101113"]//, "#442666", "#7A4364", "#2D5F7A", "#2FA853", "#E6E34C", '#8F4623'];
@@ -172,20 +172,20 @@ function Note({ note, onRemoveNote, onChangeNote, updateNote }) {
       let posX = note.posX;
       let posY = note.posY;
       let isPosChanged = false; 
-      if (window.innerWidth < (element.offsetLeft + element.offsetWidth + 15)) {
-        let newLeft = Math.trunc(window.innerWidth - element.offsetWidth - 15);
+      if (window.innerWidth < (element.offsetLeft + element.offsetWidth + margin)) {
+        let newLeft = Math.trunc(window.innerWidth - element.offsetWidth - margin);
         newLeft = newLeft < margin ? margin : newLeft;
-        if (parseInt(element.style.left, 10) !== newLeft && parseInt(element.style.left, 10) > newLeft ){
+        if (newLeft < parseInt(element.style.left, 10) ){
           posX = "" + newLeft + "px";
           element.style.left = posX;
           isPosChanged = true;
         }
       }
 
-      if (window.innerHeight < (element.offsetTop + element.offsetHeight + 15)) {
-        let newTop = Math.trunc(window.innerHeight - element.offsetHeight - 15);
+      if (window.innerHeight < (element.offsetTop + element.offsetHeight + margin)) {
+        let newTop = Math.trunc(window.innerHeight - element.offsetHeight - margin);
         newTop = newTop < margin ? margin : newTop;
-        if (parseInt(element.style.top, 10) !== newTop && parseInt(element.style.top, 10) > newTop){
+        if ( newTop < parseInt(element.style.top, 10) ){
           posY = "" + newTop + "px";
           element.style.top = posY;
           isPosChanged = true;
@@ -195,6 +195,7 @@ function Note({ note, onRemoveNote, onChangeNote, updateNote }) {
       dimensions.height = window.innerHeight;
       dimensions.width = window.innerWidth;
       if (isPosChanged){
+        console.log(window.innerHeight, window.innerWidth ,note._id,posX, posY);
         updateNote({ posX: posX, posY: posY });
         onChangeNote({ _id: note._id, "posX": posX, "posY": posY });
       }
@@ -214,7 +215,6 @@ function Note({ note, onRemoveNote, onChangeNote, updateNote }) {
   useResizeObserver(titleTextAreaRef.current, () => {
     if (titleTextAreaRef?.current) {
       const width = titleTextAreaRef.current.style.width;
-      console.log("hola", note.width,  width)
       if (width && width !== "" && note.width !== width) {
         updateNote({ width: titleTextAreaRef.current.style.width })
       }
