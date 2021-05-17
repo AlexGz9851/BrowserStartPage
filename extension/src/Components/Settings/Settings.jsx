@@ -169,14 +169,12 @@ function Settings({ settings, setSettings, setLoggedIn, imgUrl, openSettings, se
   };
 
   const iniciarSesion = () => {
-    console.log("Iniciando sesion");
     window.gapi.auth2.getAuthInstance().signIn().then(() => {
       setGoogleLogedIn(true)
     });
   }
 
   const cerrarSesion = () => {
-    console.log('Cerrando sesion');
     window.gapi.auth2.getAuthInstance().signOut();
     setOpenSettings(false);
     setGoogleLogedIn(false);

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import './MiniTodoList.css';
 import Todo from './Todo.jsx'
+import Button from '@material-ui/core/Button';
 
 function MiniTodoList(props) {
   let startingTodos = (typeof props.todos == 'undefined') ? [] : props.todos;
@@ -51,7 +52,8 @@ function MiniTodoList(props) {
 
         onRemove={onRemoveTodo}
         onChangeTodo={onChangeTodo} />)}
-      <button onClick={onAddTodo}> Add Todo </button>
+      <Button variant="outlined" onClick={onAddTodo}>Add Todo</Button>
+      {/* <button > Add Todo </button> */}
     </div>
   );
 }

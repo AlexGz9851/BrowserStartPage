@@ -15,6 +15,7 @@
   max-width: 600px;
   background-color: #202123;
   border: 1px solid #000;
+  border-radius: 10px;
 }
 
 .nota-header {
@@ -93,17 +94,16 @@
   text-align: left;
   font-size: 15px;
   color:#ccc;
-  
-  font-style:oblique;
   width: 90%;
   max-width: 540px;
   border: 0px solid #202123;
   border-style:solid;
+  padding: 5px;
 }
 
 .nota-content-todo {
   padding: 0 5px;
-  resize: both;
+  resize: none;
   height: 70px;
   min-height: 40px;
   background-color: #202123;

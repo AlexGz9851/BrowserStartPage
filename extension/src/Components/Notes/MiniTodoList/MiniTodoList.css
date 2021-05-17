@@ -1,0 +1,11 @@
+.MuiButton-root {
+  color: rgba(255, 255, 255, 0.7) !important;
+}
+
+.MuiButton-outlined {
+  border-color: rgba(255, 255, 255, 0.7) !important;
+}
+
+.MuiButtonBase-root.MuiIconButton-root.PrivateSwitchBase-root-5.MuiCheckbox-root {
+  padding: 2px 3px;
+}

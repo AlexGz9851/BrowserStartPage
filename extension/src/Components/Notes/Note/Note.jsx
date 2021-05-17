@@ -24,12 +24,12 @@ function Note({ note, onRemoveNote, onChangeNote, updateNote }) {
   let headerColors = ["#18191B"]//, "#695580", "#C76DA3", "#4897C2", "#5EA86C", "#ADAC51", "#E68550"];
 
   let defX = (window.innerWidth - (note.type === NoteTypes.TODO ? 300 : 200));
-  defX = "" +  (defX < margin ? margin : defX ) + "px";
+  defX = "" + (defX < margin ? margin : defX) + "px";
   let newPosX = (typeof note.posX === 'undefined') ? defX : note.posX;
   let newPosY = (typeof note.posY === 'undefined') ? "100px" : note.posY;
 
-  newPosX = parseInt(newPosX,10) < margin ? ""+ margin +"px" : newPosX;
-  newPosY = parseInt(newPosY,10) < margin ? ""+ margin +"px" : newPosY;
+  newPosX = parseInt(newPosX, 10) < margin ? "" + margin + "px" : newPosX;
+  newPosY = parseInt(newPosY, 10) < margin ? "" + margin + "px" : newPosY;
 
   const hashCode = (str) => {
     let hash = 0, i, chr;
@@ -138,7 +138,7 @@ function Note({ note, onRemoveNote, onChangeNote, updateNote }) {
       }
       if (newLeft < margin) {
         newLeft = margin;
-      } 
+      }
 
       elmnt.style.top = newTop + "px";
       elmnt.style.left = newLeft + "px";
@@ -164,18 +164,18 @@ function Note({ note, onRemoveNote, onChangeNote, updateNote }) {
       };
     }
     function handleResize() {
-      
+
       const element = noteHtmlNode.current;
       if (!element) {
         return
       }
       let posX = note.posX;
       let posY = note.posY;
-      let isPosChanged = false; 
+      let isPosChanged = false;
       if (window.innerWidth < (element.offsetLeft + element.offsetWidth + margin)) {
         let newLeft = Math.trunc(window.innerWidth - element.offsetWidth - margin);
         newLeft = newLeft < margin ? margin : newLeft;
-        if (newLeft < parseInt(element.style.left, 10) ){
+        if (newLeft < parseInt(element.style.left, 10)) {
           posX = "" + newLeft + "px";
           element.style.left = posX;
           isPosChanged = true;
@@ -185,7 +185,7 @@ function Note({ note, onRemoveNote, onChangeNote, updateNote }) {
       if (window.innerHeight < (element.offsetTop + element.offsetHeight + margin)) {
         let newTop = Math.trunc(window.innerHeight - element.offsetHeight - margin);
         newTop = newTop < margin ? margin : newTop;
-        if ( newTop < parseInt(element.style.top, 10) ){
+        if (newTop < parseInt(element.style.top, 10)) {
           posY = "" + newTop + "px";
           element.style.top = posY;
           isPosChanged = true;
@@ -194,12 +194,11 @@ function Note({ note, onRemoveNote, onChangeNote, updateNote }) {
 
       dimensions.height = window.innerHeight;
       dimensions.width = window.innerWidth;
-      if (isPosChanged){
-        console.log(window.innerHeight, window.innerWidth ,note._id,posX, posY);
+      if (isPosChanged) {
         updateNote({ posX: posX, posY: posY });
         onChangeNote({ _id: note._id, "posX": posX, "posY": posY });
       }
-      
+
     }
     window.addEventListener('resize', debounce(handleResize));
 
